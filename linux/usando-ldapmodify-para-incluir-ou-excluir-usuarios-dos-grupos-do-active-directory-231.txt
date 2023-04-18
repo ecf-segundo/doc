@@ -1,0 +1,189 @@
+   Link: profile
+   Link: canonical
+   Link: shortlink
+   Skip to content
+   14 de julho de 2022
+
+   GA Tech
+
+   Um guia rápido para algumas situações de informática
+
+     * Home
+     * Linux
+     * Windows
+     * Web
+     * Outros
+     * Redes
+          * Cisco
+   Pesquisar por: _____________________  [ Pesquisar ]
+   Main Menu
+   Linux
+
+    Usando ldapmodify para incluir ou excluir usuários dos grupos do Active
+                                   Directory
+
+   22 de março de 2018 - by admin
+   [IMG]
+
+   O ldapmodify está dispoível no Debian pelo pagote “ldap-utils” que são
+   utilitários do OpenLDAP. Algumas vezes temos necessidade de criar scrips
+   para automatizar modificações de usuários e grupos do Active Directory da
+   Microsoft e essas ferramentas do “Linux” podem ser muito úteis.
+
+   Vou descrever aqui como incluir ou exluir usuários de grupos do Active
+   Directory usando o ldapmodify:
+
+     1ª Criamos um arquivo ldif
+     touch adicionaNoGrupo.ldif
+
+   2º Editamos o arquivo basicamente com 3 linhas. A primeira linha
+   corresponde ao Grupo que você vai acrescentar o usuário. a Segunda linha a
+   ação que você vai fazer e em qual atributo. A última linha você vai
+   indicar o usuário que vai ingressar neste grupo. O arquivo não deve conter
+   espaços no começo nem no final das linhas.
+
+     dn: CN=Grupo,CN=Users,DC=guilherme,DC=araujo,DC=com,DC=br
+     add: member
+     member: cn=joao,OU=TESTE,DC=guilherme,DC=araujo,DC=com,DC=br
+
+   3º Executar o ldapmodify na linha de comando utilizando um usuário
+   adminstrador do dominio:
+
+     $ ldapmodify -x -h servidorad.guilhermearaujo.com.br -D
+     guilherme@guilhermearaujo.com.br -W -f adicionaNoGrupo.ldif
+
+     4º Fazendo um pesquisa pelo usuário e ver os grupos
+     $ ldapsearch -x -h servidorad.guilhermearaujo.com.br -D
+     guilherme@guilhermearaujo.com.br -W -b
+     DC=guilherme,DC=araujo,DC=com,DC=br -LLL -s sub samaccountname=joao
+     memberof
+
+   Para remover basta trocar a palavra “add” por “delete” no arquivo ldif.
+
+   Pode-se também fazer várias modificações utilizando apenas um arquivo,
+   bastando separar as ações por um hífen (-).
+
+     dn: CN=Grupo,CN=Users,DC=guilherme,DC=araujo,DC=com,DC=br
+     add: member
+     member: cn=joao,OU=TESTE,DC=guilherme,DC=araujo,DC=com,DC=br
+     –
+     add: member
+     member: cn=maria,OU=TESTE,DC=guilherme,DC=araujo,DC=com,DC=br
+     –
+     delete: member
+     member: cn=fulano,OU=TESTE,DC=guilherme,DC=araujo,DC=com,DC=br
+
+   Para alterar grupos diferente no mesmo arquivo deve-se pular uma linha e
+   indicar no DN do outro grupo:
+
+     dn: CN=Grupo,CN=Users,DC=guilherme,DC=araujo,DC=com,DC=br
+     add: member
+     member: cn=joao,OU=TESTE,DC=guilherme,DC=araujo,DC=com,DC=
+
+     dn: CN=Grupo_2,CN=Users,DC=guilherme,DC=araujo,DC=com,DC=br
+     add: member
+     member: cn=joao,OU=TESTE,DC=guilherme,DC=araujo,DC=com,DC=br
+
+   Referencia: Implementando Autenticação Centralizada com LDAP – Valcir
+   Cabral Vargas
+
+   TaggedActive DirectorygruposLDAPldap-utilsldapmodifyldifusuários
+
+    Related Posts
+
+   ssh “Are you sure you want to continue connecting”
+
+  ssh “Are you sure you want to continue connecting”
+
+   7 de abril de 20227 de abril de 2022
+
+   Exibir LUNs conectadas no Linux
+
+  Exibir LUNs conectadas no Linux
+
+   31 de março de 202231 de março de 2022
+
+   Alterando usuário do Mysql / Mariadb
+
+  Alterando usuário do Mysql / Mariadb
+
+   16 de fevereiro de 202216 de fevereiro de 2022
+
+Navegação de Post
+
+   Previous Article Alguns comandos básicos de equipamentos Cisco
+   Next Article Configurações básicas servidor CentOS
+
+    About admin
+
+   View all posts by admin →
+   Pesquisar por: _____________________  [ Pesquisar ]
+
+    Posts recentes
+
+     * ssh “Are you sure you want to continue connecting”
+     * Exibir LUNs conectadas no Linux
+     * Alterando usuário do Mysql / Mariadb
+     * DNS Search no Debian 11
+     * Como fica alguns comandos do Mysql no PostgreSql
+
+    Comentários
+
+    Arquivos
+
+     * abril 2022
+     * março 2022
+     * fevereiro 2022
+     * janeiro 2022
+     * novembro 2021
+     * outubro 2021
+     * setembro 2021
+     * agosto 2021
+     * julho 2021
+     * fevereiro 2021
+     * abril 2020
+     * março 2020
+     * janeiro 2020
+     * dezembro 2019
+     * novembro 2019
+     * agosto 2019
+     * abril 2019
+     * março 2019
+     * fevereiro 2019
+     * junho 2018
+     * abril 2018
+     * março 2018
+     * fevereiro 2018
+     * janeiro 2018
+     * novembro 2017
+     * outubro 2017
+     * fevereiro 2017
+     * abril 2016
+     * janeiro 2016
+     * novembro 2015
+     * outubro 2015
+     * setembro 2015
+     * agosto 2015
+     * julho 2015
+     * abril 2015
+     * março 2015
+     * fevereiro 2015
+
+    Categorias
+
+     * Artigos
+          * Linux
+          * Outros
+          * Redes
+               * Cisco
+          * Web
+          * Windows
+
+    Meta
+
+     * Acessar
+     * Feed de posts
+     * Feed de comentários
+     * WordPress.org
+   Copyright © 2022 GA Tech.
+   Powered by WordPress and HitMag.

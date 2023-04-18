@@ -1,0 +1,144 @@
+   Link: profile
+   Link: canonical
+   Link: shortlink
+   Skip to content
+   14 de julho de 2022
+
+   GA Tech
+
+   Um guia rápido para algumas situações de informática
+
+     * Home
+     * Linux
+     * Windows
+     * Web
+     * Outros
+     * Redes
+          * Cisco
+   Pesquisar por: _____________________  [ Pesquisar ]
+   Main Menu
+   Outros
+
+                            Ver Câmeras DVR via VLC
+
+   1 de julho de 20211 de julho de 2021 - by admin
+   [IMG]
+
+   Para ver câmeras do DVR via VLC podemos utiliar a seguinte URL:
+
+   rtsp:///user=&password=&channel=&stream=0.sdp?
+
+   No VLC vá em Mídia > Abrin Transmissão de Rede. Na aba Rede coloque a url
+   no formato a baixo modificando para suas configurações:
+
+   rtsp://192.168.0.5/user=admin&password=123456&channel=1&stream=0.sdp?
+
+   [IMG]
+
+   O parâmetro channel é a camera de deseja visualizar, pois é possível
+   visualizar apenas uma por vez.
+
+   Dica: no DVR crie um usuário com permissão de apenas visualização das
+   câmeras pois a senha é passada na url e pode ser interceptada.
+
+   Obs: Dependendo do modelo do DVR pode ser que tenha que habilitar o
+   protocolo RTSP porta 554.
+
+    Related Posts
+
+   Como fica alguns comandos do Mysql no PostgreSql
+
+  Como fica alguns comandos do Mysql no PostgreSql
+
+   8 de novembro de 20219 de novembro de 2021
+
+   Comandos GIT
+
+  Comandos GIT
+
+   30 de abril de 201930 de abril de 2019
+
+   [IMG]
+
+  Configurar encaminhamento de log no Switch HP sistema Provision(Procurve)
+
+   24 de outubro de 201724 de outubro de 2017
+
+Navegação de Post
+
+   Previous Article Set-AdUser e get-AdUser exemplos PowerSheel AD
+   Next Article Criando pendrive bootavel do Linux via terminal
+
+    About admin
+
+   View all posts by admin →
+   Pesquisar por: _____________________  [ Pesquisar ]
+
+    Posts recentes
+
+     * ssh “Are you sure you want to continue connecting”
+     * Exibir LUNs conectadas no Linux
+     * Alterando usuário do Mysql / Mariadb
+     * DNS Search no Debian 11
+     * Como fica alguns comandos do Mysql no PostgreSql
+
+    Comentários
+
+    Arquivos
+
+     * abril 2022
+     * março 2022
+     * fevereiro 2022
+     * janeiro 2022
+     * novembro 2021
+     * outubro 2021
+     * setembro 2021
+     * agosto 2021
+     * julho 2021
+     * fevereiro 2021
+     * abril 2020
+     * março 2020
+     * janeiro 2020
+     * dezembro 2019
+     * novembro 2019
+     * agosto 2019
+     * abril 2019
+     * março 2019
+     * fevereiro 2019
+     * junho 2018
+     * abril 2018
+     * março 2018
+     * fevereiro 2018
+     * janeiro 2018
+     * novembro 2017
+     * outubro 2017
+     * fevereiro 2017
+     * abril 2016
+     * janeiro 2016
+     * novembro 2015
+     * outubro 2015
+     * setembro 2015
+     * agosto 2015
+     * julho 2015
+     * abril 2015
+     * março 2015
+     * fevereiro 2015
+
+    Categorias
+
+     * Artigos
+          * Linux
+          * Outros
+          * Redes
+               * Cisco
+          * Web
+          * Windows
+
+    Meta
+
+     * Acessar
+     * Feed de posts
+     * Feed de comentários
+     * WordPress.org
+   Copyright © 2022 GA Tech.
+   Powered by WordPress and HitMag.

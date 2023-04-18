@@ -1,0 +1,141 @@
+   Link: profile
+   Link: canonical
+   Link: shortlink
+   Skip to content
+   14 de julho de 2022
+
+   GA Tech
+
+   Um guia rápido para algumas situações de informática
+
+     * Home
+     * Linux
+     * Windows
+     * Web
+     * Outros
+     * Redes
+          * Cisco
+   Pesquisar por: _____________________  [ Pesquisar ]
+   Main Menu
+   Windows
+
+                    Script para montar pastas compartilhadas
+
+   20 de junho de 201820 de junho de 2018 - by admin
+   [IMG]
+
+   #!/bin/bash
+   # Script pra mounta as pastas da rede
+   # O arquivo cifspw deve estar assim:
+   ############################################
+
+     sudo mount //fileserver/pasta1 $HOME/pasta1 -o
+     dir_mode=0777,file_mode=0777,credentials=/etc/cifspw
+     sudo mount //fileserver/pasta2 $HOME/pasta2 -o
+     dir_mode=0777,file_mode=0777,credentials=/etc/cifspw
+
+    
+
+   Criem o arquivo “/etc/cifspw”
+
+     username=joao
+     password=1234
+
+    Related Posts
+
+   Alterar Atributo Flags de usuário do AD
+
+  Alterar Atributo Flags de usuário do AD
+
+   24 de setembro de 202124 de setembro de 2021
+
+   Gpresult no computador remoto
+
+  Gpresult no computador remoto
+
+   31 de agosto de 202131 de agosto de 2021
+
+   [IMG]
+
+  Set-AdUser e get-AdUser exemplos PowerSheel AD
+
+   9 de fevereiro de 20219 de fevereiro de 2021
+
+Navegação de Post
+
+   Previous Article Redirecionando log para servidor linux com rsyslog
+   Next Article Comando úteis para Política de Grupos(GPO)
+
+    About admin
+
+   View all posts by admin →
+   Pesquisar por: _____________________  [ Pesquisar ]
+
+    Posts recentes
+
+     * ssh “Are you sure you want to continue connecting”
+     * Exibir LUNs conectadas no Linux
+     * Alterando usuário do Mysql / Mariadb
+     * DNS Search no Debian 11
+     * Como fica alguns comandos do Mysql no PostgreSql
+
+    Comentários
+
+    Arquivos
+
+     * abril 2022
+     * março 2022
+     * fevereiro 2022
+     * janeiro 2022
+     * novembro 2021
+     * outubro 2021
+     * setembro 2021
+     * agosto 2021
+     * julho 2021
+     * fevereiro 2021
+     * abril 2020
+     * março 2020
+     * janeiro 2020
+     * dezembro 2019
+     * novembro 2019
+     * agosto 2019
+     * abril 2019
+     * março 2019
+     * fevereiro 2019
+     * junho 2018
+     * abril 2018
+     * março 2018
+     * fevereiro 2018
+     * janeiro 2018
+     * novembro 2017
+     * outubro 2017
+     * fevereiro 2017
+     * abril 2016
+     * janeiro 2016
+     * novembro 2015
+     * outubro 2015
+     * setembro 2015
+     * agosto 2015
+     * julho 2015
+     * abril 2015
+     * março 2015
+     * fevereiro 2015
+
+    Categorias
+
+     * Artigos
+          * Linux
+          * Outros
+          * Redes
+               * Cisco
+          * Web
+          * Windows
+
+    Meta
+
+     * Acessar
+     * Feed de posts
+     * Feed de comentários
+     * WordPress.org
+   Copyright © 2022 GA Tech.
+   Powered by WordPress and HitMag.

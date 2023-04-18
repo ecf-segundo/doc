@@ -1,0 +1,188 @@
+   Link: profile
+   Link: canonical
+   Link: shortlink
+   Skip to content
+   14 de julho de 2022
+
+   GA Tech
+
+   Um guia rápido para algumas situações de informática
+
+     * Home
+     * Linux
+     * Windows
+     * Web
+     * Outros
+     * Redes
+          * Cisco
+   Pesquisar por: _____________________  [ Pesquisar ]
+   Main Menu
+   Linux
+
+                     Configurações básicas servidor CentOS
+
+   27 de março de 2018 - by admin
+   [IMG]
+
+   Configurando FQDN do CentOS 7
+
+     Renomeando CentOS 7 definitivamente:
+     # hostnamectl set-hostname servidor1
+
+   Renomeando o FQDN – Editar arquivo /etc/hosts e acrescentar:
+
+     192.168.100.100 servidor1.guilhermearaujo.com.br servidor1
+
+   Verificando:
+
+     # hostname -f
+
+  Interface de rede no CentoOS
+
+   Se você realizar a instalação do CentOS minimal você não terá o pacote
+   net-tools instalado, então não conseguira usar o comando “ifconfig”. Mas o
+   pacote que, podemos dizer, substituto é o iproute2 já está disponível por
+   padrão. Podemos usar o comando “ip addr show” para listar as interfaces e
+   ip’s.
+
+   Os arquivos de configuração de interface do CentOS ficam em
+   “/etc/sysconfig/network-scripts/”. Além de Script de configuração das
+   interfaces, outros scripts usado pelo sistemas estão definidos ai. Ao
+   abrir qualquer um delas podemos notar o uso do comando “ip” do pacote
+   “iproute2” o que demostra o desuso do pacote “net-tools” (ifconfig, route,
+   arp). Dica: esqueça net-tools e acostume com o iproute2.
+
+   Alguns parâmetros do arquivo “ifcfg-xxxx”
+
+     PEERDNS=no # Se esta opção estiver com yes o Network-manager poderá
+     reecrever o arquivo resolv.conf
+     NM_CONTROLLETD=no # Essa opção faz com que o Network-Manager não
+     interfira nesta interface.
+     BOOTPROTO=none # Para usar ip fixo
+     IPADDR=192.168.100.100 # IP Fixo
+     NETMASK=255.255.255.0 # Marcara de sub-rede
+     DNS1=8.8.8.8 # Servidor de DNS
+     DNS2=8.8.4.4 # Outro Servidor de DNS
+
+     GATEWAY=192.168.100.1
+
+   Editar o arquivo /etc/sysconfig/network
+
+     NETWORKING=yes
+     HOSTNAME=servidor1
+
+   Mas configurações de sysconfig podem ser consultadas neste endereço
+   /usr/share/doc/initscripts-*/sysconfig.txt
+
+   ATUALIZANDO O SERVIDOR
+
+     # yum -y update
+
+   Instalando ferramento de desenvolvedor para auxiliar em instalações
+   futuras, como compilação de pacotes.
+
+     # yum -y groupinstall ‘Development Tools’
+
+   TaggedCentOShostnamehostnamectlifconfigip aip
+   addriproute2net-toolsservidor
+
+    Related Posts
+
+   ssh “Are you sure you want to continue connecting”
+
+  ssh “Are you sure you want to continue connecting”
+
+   7 de abril de 20227 de abril de 2022
+
+   Exibir LUNs conectadas no Linux
+
+  Exibir LUNs conectadas no Linux
+
+   31 de março de 202231 de março de 2022
+
+   Alterando usuário do Mysql / Mariadb
+
+  Alterando usuário do Mysql / Mariadb
+
+   16 de fevereiro de 202216 de fevereiro de 2022
+
+Navegação de Post
+
+   Previous Article Usando ldapmodify para incluir ou excluir usuários dos
+   grupos do Active Directory
+   Next Article Mensagem “Arquivo binário (entrada padrão) coincide com o
+   padrão” ao dar um grep
+
+    About admin
+
+   View all posts by admin →
+   Pesquisar por: _____________________  [ Pesquisar ]
+
+    Posts recentes
+
+     * ssh “Are you sure you want to continue connecting”
+     * Exibir LUNs conectadas no Linux
+     * Alterando usuário do Mysql / Mariadb
+     * DNS Search no Debian 11
+     * Como fica alguns comandos do Mysql no PostgreSql
+
+    Comentários
+
+    Arquivos
+
+     * abril 2022
+     * março 2022
+     * fevereiro 2022
+     * janeiro 2022
+     * novembro 2021
+     * outubro 2021
+     * setembro 2021
+     * agosto 2021
+     * julho 2021
+     * fevereiro 2021
+     * abril 2020
+     * março 2020
+     * janeiro 2020
+     * dezembro 2019
+     * novembro 2019
+     * agosto 2019
+     * abril 2019
+     * março 2019
+     * fevereiro 2019
+     * junho 2018
+     * abril 2018
+     * março 2018
+     * fevereiro 2018
+     * janeiro 2018
+     * novembro 2017
+     * outubro 2017
+     * fevereiro 2017
+     * abril 2016
+     * janeiro 2016
+     * novembro 2015
+     * outubro 2015
+     * setembro 2015
+     * agosto 2015
+     * julho 2015
+     * abril 2015
+     * março 2015
+     * fevereiro 2015
+
+    Categorias
+
+     * Artigos
+          * Linux
+          * Outros
+          * Redes
+               * Cisco
+          * Web
+          * Windows
+
+    Meta
+
+     * Acessar
+     * Feed de posts
+     * Feed de comentários
+     * WordPress.org
+   Copyright © 2022 GA Tech.
+   Powered by WordPress and HitMag.

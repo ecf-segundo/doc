@@ -1,0 +1,300 @@
+   Link: profile
+   Link: canonical
+   Link: shortlink
+   Skip to content
+   14 de julho de 2022
+
+   GA Tech
+
+   Um guia rápido para algumas situações de informática
+
+     * Home
+     * Linux
+     * Windows
+     * Web
+     * Outros
+     * Redes
+          * Cisco
+   Pesquisar por: _____________________  [ Pesquisar ]
+   Main Menu
+   Redes
+
+              Gerenciando switch’s 3com e HP via Linha de comando
+
+   22 de janeiro de 202016 de julho de 2020 - by admin
+   Console switch HP
+
+   Descrevendo comandos básicos de switches com Sistem Operacional Comware.
+
+   Após logar com admin via ssh necessário entrar no modo de gerenciamentos
+   do switch
+
+ _cmdline-mode on
+ Senha: 512900 ou Jinhua1920unauthorized  para sw hp 1920
+
+   Você entrará no modo User View. Para mode de configuração digite o
+   seguinte comando:
+
+ system-view
+
+   Para sair de qualquer contexto use “quit” Para desfazer o comando utilize
+   undo seguido do comando (Mesmo que “no” em outros switchs) Aqui não existe
+   o comando show e sim o comando display
+
+VLANS
+
+   Criar uma vlan ou entrar no contexto de uma vlan
+
+ vlan 15
+
+   Nomear vlan
+
+ vlan 11
+  description nti
+  name nti
+
+   Colocar a vlan em uma porta
+
+ port GigabitEthernet 1/0/21
+
+   Ver configuração de uma vlan, em qual porta está
+
+ display vlan 15
+
+INTERFACES
+
+   Entrar no contexte de uma interface
+
+ interface GigabitEthernet 1/0/44
+
+   Configurar range de porta de uma vez (Não suportado em alguns hp)
+
+ interface range GigabitEthernet 1/0/1 to GigabitEthernet 1/0/10
+
+   Exibir configurações da interface
+
+ display interface GigabitEthernet 1/0/44
+
+   Colocar porta untag em uma vlan Primeira acessa a interface no exemplo é a
+   1/0/4
+
+ interface GigabitEthernet 1/0/4
+
+   Podemos mudar o tipo da interface (access, trunk , hybrid)
+
+ port link-type <access|trunk|hybrid>
+
+   Colocando porta em uma vlan untag
+
+ port access vlan 15
+
+   Desativar a porta
+
+ shutdown
+
+   Ativar a porta
+
+ undo shutdown
+
+   descrição da porta
+
+ description pcguilherme
+
+   Colocar uma porta como trunk
+
+ port link-type trunk
+
+   Acrescentar/retirar uma vlan à porta trunk
+
+ port trunk permit vlan 22      
+ undo port trunk permit vlan 22
+
+   Portas Hybridas (Entre no contexto da porta a ser configurada)
+
+ port link-type hybrid
+ interface GigabitEthernet 1/0/4
+ port hybrid vlan 11 tagged
+ port hybrid vlan 62 untagged
+
+   Retirar uma vlan da porta trunk
+
+ undo port hybrid vlan 11
+
+Configuração Básica
+
+   Considerando um switch em configuração de fábrica:
+
+     * Acessar o System- View
+     * Criar a Vlan 56
+     * Criar a Vlan-Interface 56
+     * Desativar a Vlan 1
+     * Incluir interface na Vlan 56 (tag)
+     * Definir rota padrão
+
+   Os comandos relacionados são: vlan 56
+   [Vlan56] description Infra
+   [Vlan56] name Infra
+   [Vlan56] quit
+   interface Vlan-interface 56
+   [Vlan-interface56] ip address 10.200.56.X 255.255.254.0
+   [Vlan-interface56] quit
+   interface Vlan-interface 1
+   [Vlan-interface1] shutdown
+   [Vlan-interface1] quit
+   interface GigabitEthernet 1/0/24
+   [GigabitEthernet1/0/24] port link-type hybrid
+   [GigabitEthernet1/0/24] port hiybrid pvid vlan 56
+   [GigabitEthernet1/0/24] port hiybrid vlan 56 tagged
+   [GigabitEthernet1/0/24] quit
+   ip route-static 0.0.0.0 0 Vlan-interface 56 10.200.56.1 permanent
+   save
+
+Outras funções
+
+   Exibir MAC e respectivas portas. (Portas troncos terão mais MAC’s e porta
+   access apenas um MAC)
+
+ display mac-address
+
+   Colocar um ip em uma vlan especifica (Útil para utilizar a função layes 3
+   do sw)
+
+ interface Vlan-interface 11
+ ip address 143.106.49.110 26
+
+   Trocando a senha e permitindo ssh do usuário admin
+
+ local-user admin
+ password simple <senha>
+ service-type ssh
+
+
+   Habilitando o serviço ssh
+
+ ssh server enable
+
+Configuração de Informações
+
+   Mudar o campo contato
+
+ snmp-agent sys-info contact 02/37710
+
+   Mudar o campo Localização
+
+ snmp-agent sys-info location fcm11-2-psq
+
+   Mudar o campo Sysname
+
+ sysname nomedoswitch
+
+Configurando DNS e Hora(NTP)
+
+   Configuração de dns:
+
+ dns domain fcm.unicamp.br
+ dns server 143.106.46.46
+ dns resolve
+
+   Configurando servidor de horas
+
+ clock timezone Brasilia minus 03:00:00
+ ntp-service unicast-server ntp.fcm.unicamp.br
+
+    Related Posts
+
+   Instalando o BIRD no PFSense
+
+  Instalando o BIRD no PFSense
+
+   10 de dezembro de 201910 de dezembro de 2019
+
+   [IMG]
+
+  Alguns comandos básicos de equipamentos Cisco
+
+   12 de março de 201813 de março de 2018
+
+   [IMG]
+
+  Como “resetar” as configurações do switch ou Roteador Cisco
+
+   12 de março de 201812 de março de 2018
+
+Navegação de Post
+
+   Previous Article Gerenciando vmware via CLI
+   Next Article Dicas para administradores de redes
+
+    About admin
+
+   View all posts by admin →
+   Pesquisar por: _____________________  [ Pesquisar ]
+
+    Posts recentes
+
+     * ssh “Are you sure you want to continue connecting”
+     * Exibir LUNs conectadas no Linux
+     * Alterando usuário do Mysql / Mariadb
+     * DNS Search no Debian 11
+     * Como fica alguns comandos do Mysql no PostgreSql
+
+    Comentários
+
+    Arquivos
+
+     * abril 2022
+     * março 2022
+     * fevereiro 2022
+     * janeiro 2022
+     * novembro 2021
+     * outubro 2021
+     * setembro 2021
+     * agosto 2021
+     * julho 2021
+     * fevereiro 2021
+     * abril 2020
+     * março 2020
+     * janeiro 2020
+     * dezembro 2019
+     * novembro 2019
+     * agosto 2019
+     * abril 2019
+     * março 2019
+     * fevereiro 2019
+     * junho 2018
+     * abril 2018
+     * março 2018
+     * fevereiro 2018
+     * janeiro 2018
+     * novembro 2017
+     * outubro 2017
+     * fevereiro 2017
+     * abril 2016
+     * janeiro 2016
+     * novembro 2015
+     * outubro 2015
+     * setembro 2015
+     * agosto 2015
+     * julho 2015
+     * abril 2015
+     * março 2015
+     * fevereiro 2015
+
+    Categorias
+
+     * Artigos
+          * Linux
+          * Outros
+          * Redes
+               * Cisco
+          * Web
+          * Windows
+
+    Meta
+
+     * Acessar
+     * Feed de posts
+     * Feed de comentários
+     * WordPress.org
+   Copyright © 2022 GA Tech.
+   Powered by WordPress and HitMag.

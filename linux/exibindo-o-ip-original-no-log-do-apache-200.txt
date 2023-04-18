@@ -1,0 +1,166 @@
+   Link: profile
+   Link: canonical
+   Link: shortlink
+   Skip to content
+   14 de julho de 2022
+
+   GA Tech
+
+   Um guia rápido para algumas situações de informática
+
+     * Home
+     * Linux
+     * Windows
+     * Web
+     * Outros
+     * Redes
+          * Cisco
+   Pesquisar por: _____________________  [ Pesquisar ]
+   Main Menu
+   Linux / Web
+
+                    Exibindo o ip original no log do apache
+
+   16 de fevereiro de 2018 - by admin
+   [IMG]
+
+   Quando usamos apache com o proxy reverso como frontend na hora de exibir o
+   log de acesso do apache por padrão vemos o ip do Proxy-reverso, e não o do
+   cliente final.
+
+   Uma forma de arruma isso é utilizar a flag “X-Forwarded-For” presente no
+   cabeçalho HTTP.
+
+   Vou mostrar o exemplo com apache e o servidor proxy reverso com nginx:
+
+   No arquivo /etc/apache2/apache2.conf edite a linha “LogFormat”, no lugar
+   do %h coloque “%{X-Forwarded-For}i”, lembrando de verificar qual log está
+   usando no seus vhost’s, no meu caso estou usando o “combined”:
+
+      LogFormat “%v:%p %h %l %u %t \”%r\” %>s %O \”%{Referer}i\”
+     \”%{User-Agent}i\”” vhost_combined
+     LogFormat “%v:%p %{X-Forwarded-For}i %c %l %u %t \”%r\” %>s %O
+     \”%{Referer}i\” \”%{User-Agent}i\”” combined
+
+   Agora na configuração de proxy do nginx você deve colocar a Flag
+   X-Forwareded-For:
+
+     location / {
+     proxy_pass https://127.0.0.1:4433;
+
+     proxy_set_header Host $host;
+     proxy_set_header X-Real-IP $remote_addr;
+     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+     proxy_set_header X-Forwarded-Proto $scheme;
+
+     # configurações de cache
+     proxy_cache portalhortolandia;
+     add_header X-Proxy-Cache $upstream_cache_status;
+
+     }
+
+    
+
+   Reinicie o serviço do Nginx e do apache e verifique o log do apache para
+   ver se o ip original está aparecendo.
+
+   TaggedapachelognginxX-Forwarded-For
+
+    Related Posts
+
+   ssh “Are you sure you want to continue connecting”
+
+  ssh “Are you sure you want to continue connecting”
+
+   7 de abril de 20227 de abril de 2022
+
+   Exibir LUNs conectadas no Linux
+
+  Exibir LUNs conectadas no Linux
+
+   31 de março de 202231 de março de 2022
+
+   Alterando usuário do Mysql / Mariadb
+
+  Alterando usuário do Mysql / Mariadb
+
+   16 de fevereiro de 202216 de fevereiro de 2022
+
+Navegação de Post
+
+   Previous Article Senha do root no mariaDB
+   Next Article Colocando ipv6 estátito via linha de comando
+
+    About admin
+
+   View all posts by admin →
+   Pesquisar por: _____________________  [ Pesquisar ]
+
+    Posts recentes
+
+     * ssh “Are you sure you want to continue connecting”
+     * Exibir LUNs conectadas no Linux
+     * Alterando usuário do Mysql / Mariadb
+     * DNS Search no Debian 11
+     * Como fica alguns comandos do Mysql no PostgreSql
+
+    Comentários
+
+    Arquivos
+
+     * abril 2022
+     * março 2022
+     * fevereiro 2022
+     * janeiro 2022
+     * novembro 2021
+     * outubro 2021
+     * setembro 2021
+     * agosto 2021
+     * julho 2021
+     * fevereiro 2021
+     * abril 2020
+     * março 2020
+     * janeiro 2020
+     * dezembro 2019
+     * novembro 2019
+     * agosto 2019
+     * abril 2019
+     * março 2019
+     * fevereiro 2019
+     * junho 2018
+     * abril 2018
+     * março 2018
+     * fevereiro 2018
+     * janeiro 2018
+     * novembro 2017
+     * outubro 2017
+     * fevereiro 2017
+     * abril 2016
+     * janeiro 2016
+     * novembro 2015
+     * outubro 2015
+     * setembro 2015
+     * agosto 2015
+     * julho 2015
+     * abril 2015
+     * março 2015
+     * fevereiro 2015
+
+    Categorias
+
+     * Artigos
+          * Linux
+          * Outros
+          * Redes
+               * Cisco
+          * Web
+          * Windows
+
+    Meta
+
+     * Acessar
+     * Feed de posts
+     * Feed de comentários
+     * WordPress.org
+   Copyright © 2022 GA Tech.
+   Powered by WordPress and HitMag.

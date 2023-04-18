@@ -1,0 +1,399 @@
+   Link: profile
+   Link: canonical
+   Link: shortlink
+   Skip to content
+   14 de julho de 2022
+
+   GA Tech
+
+   Um guia rápido para algumas situações de informática
+
+     * Home
+     * Linux
+     * Windows
+     * Web
+     * Outros
+     * Redes
+          * Cisco
+   Pesquisar por: _____________________  [ Pesquisar ]
+   Main Menu
+   Linux
+
+                      Dicas para administradores de redes
+
+   30 de janeiro de 202030 de janeiro de 2020 - by admin
+
+                        Log – O aliado do administrador
+
+   Adilson Paz da Silva 10 de novembro de 2014
+
+   O dia-a-dia do administrador de redes/sistemas tem em suas atividades
+   manter o sistema no ar o maior tempo possível. Essa disponibilidade é
+   fundamental para o sucesso da comunicação da instituição, seja na hora de
+   consultar um e-mail, procurar um contato ou mesmo analisar o relatório
+   online.
+
+   O que tem de errado nisso? Nada, atualmente sistemas são projetados para
+   ficar on-line 24×7, e onde está o problema? Justamente é isso que o
+   Cracker procura, sistemas on-line 24 horas e “desatualizados”, passíveis
+   de exploração através de vulnerabilidades novas ou antigas. A demanda de
+   serviços versos mão de obra faz com que o administrador, em muitos casos,
+   não dê conta de atualizar o parque de servidores em tempo hábil. Toda
+   semana tem inúmeras atualizações dos sistemas operacionais, seja Linux,
+   Windows, MacOs ou Android.
+
+   Um aliado do administrador de sistemas e da Segurança da Informação são os
+   arquivos de logs que registram tudo que acontece. Em servidores Linux os
+   logs são armazenados em /var/log, no entanto, alguns aplicativos, como o
+   Apache, incluem um subdiretório específico onde guardam seus próprios
+   arquivos.
+
+   Acostume-se a olhar constantemente/diariamente os arquivos de log dos
+   sistemas que você administra. Isto é importante para encontrar possíveis
+   falhas de segurança, tentativas de acessos não autorizados e erros de
+   aplicações ou sistemas.
+
+   Quando um computador é invadido ou existe a suspeita, os logs costumam ser
+   o principal insumo para iniciar uma investigação e tentar entender por
+   onde e como o invasor procedeu. Muitos sistemas HIDS (Sistemas de detecção
+   de intrusão para Hosts) também usam os logs como uma forma de “alarme
+   antecipado”, reconhecendo padrões de ataque antes que eles tenham sucesso,
+   alertando os administradores do sistema (é comum o atacante falhar várias
+   vezes antes de acertar).
+   Abaixo a lista dos arquivos de logs mais importantes (podem variar de
+   acordo com o sistema operacional);
+
+  /etc/mail/maillog = Arquivo que registra os logs do Servidor de E-mails;
+  /var/log/messages = Contém registros de acesso ao sistema e em alguns casos registros do IPTABLES;
+  /var/log/httpd/(access, error ou agent.log) = Logs do Servidor Web Apache;
+  /var/log/lpr.log = logs de impressoras. Hoje são visadas por Crackers, pois geralmente não recebem atualizações ou são sistemas embarcados baseados em Linux ou Windows;
+  /etc/log/daemon.log = Logs de serviços em geral;
+  /var/log/syslog: log do sistema;
+  /var/log/auth.log: log de autenticação;
+  /var/log/kern.log: log do kernel;
+  /var/log/cron.log: log crond;
+  /var/log/lighttpd: log de erro e acesso a Lighttpd;
+  /var/log/boot.log: registro de inicialização do sistema;
+  /var/log/mysqld.log: registro de banco de dados MySQL;
+
+   “Alguns comandos facilitam na hora de identificar possíveis alterações no
+   sistema”. Para escrever esse artigo foi utilizado o sistema operacional
+   Ubuntu 14.04. Note que pode ser necessário a instalação de alguns
+   utilitários.
+
+        Comando EGREP:
+        Uma versão do grep que aceita a sintaxe moderna de expressões regulares.
+
+   Execute o comando:
+
+  egrep :x:0: /etc/passwd
+
+   O comando egrep deve retornar em uma instalação padrão Linux a linha
+   abaixo:
+
+  root:x:0:0:root:/root:/bin/bash
+
+   Por padrão somente deveria existir um usuário com UID 0.
+
+        Comando HISTORY:
+        Comandos executados no sistema pelo usuário.
+        Os comandos executados também são uma fonte para coletar informações
+        sobre o que foi feito no servidor.
+
+   Exemplo:
+
+ less ~/.bash_history
+
+   Retorno do comando:
+
+ hostname -a
+ cat /proc/version
+ sudo ip -6 address show eth0
+ sudo ip -6 address show eth1
+ sudo cat /proc/net/if_inet6
+ ifconfig
+ sudo traceroute -n -w 2 -m 2001:4860:4860::8888
+ exit
+ sudo cat /var/log/*|grep 'maq01'|grep 'kernel'|awk '{print $1 $2 $3 $6 $7 $8 $9 $10 $11 $12}'
+ /home/user01/.bash_history
+ (END)
+
+        Comando CURL:
+
+   É uma ferramenta desenvolvida para a transferência de arquivos pela
+   Internet pelo próprio terminal de comandos do sistema
+   Obtenha o IP Publico da sua rede.
+   Exemplo:
+
+ user01@maq01:~$ curl ifconfig.me
+
+   Retorno do comando:
+
+ 123.123.xx.xx
+
+        Comando LSOF:
+
+   É utilizado para mostrar os arquivos/programas que estão abertos no
+   sistema.
+   Aplicações usando conexões de internet no momento.
+
+   Exemplo:
+
+ user01@maq01:~$ lsof -P -i -n
+
+   Retorno do comando:
+
+ COMMAND    PID    USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
+ indicator 2026 user01   13u  IPv6  97540      0t0  TCP [::1]:58488->[::1]:631 (CLOSE_WAIT)
+ thunderbi 2313 user01   32u  IPv4  95541      0t0  TCP 123.123.xx.xx:55198->123.123.xx.xx:993 (ESTABLISHED)
+ thunderbi 2313 user01   38u  IPv4  14717      0t0  TCP 123.123.xx.xx:52630->123.123.xx.xx:993 (ESTABLISHED)
+ thunderbi 2313 user01   65u  IPv4 153268      0t0  TCP 123.123.xx.xx:55511->123.123.xx.xx:993 (ESTABLISHED)
+ ssh       2519 user01    3u  IPv4  15981      0t0  TCP 123.123.xx.xx:33664->123.123.xx.xx:22 (ESTABLISHED)
+
+   Este comando, exibe somente o nome das aplicações:
+
+   Exemplo:
+
+ user01@maq01:~$ lsof -P -i -n | cut -f 1 -d " "| uniq | tail -n +2
+
+   Retorno do comando:
+
+ indicator
+ thunderbi
+ ssh
+
+        Comando SS:
+        Outro utilitário para visualizar quais sistema estão conectados e quais
+        aplicações estão usando conexões de internet no momento.
+
+   Exemplo:
+
+ user01@maq01:~$ ss
+
+   Retorno do comando:
+
+ tcp    CLOSE-WAIT 28     0        123.123.xx.xx:37952      91.189.xx.xx:https
+ tcp    CLOSE-WAIT 28     0        123.123.xx.xx:37960      91.189.xx.xx:https
+ tcp    ESTAB      0      0        123.123.xx.xx:34474     123.123.xx.xx:imaps
+ tcp    ESTAB      0      0        123.123.xx.xx:36131     123.123.xx.xx:imaps
+ tcp    CLOSE-WAIT 28     0        123.123.xx.xx:48760      91.189.xx.xx:https
+
+        Comando WHEREIS:
+        Busca por arquivos executáveis, man pages, arquivos de configuração e
+        fontes.
+        Encontre o path/manual/binário de um comando
+
+   Exemplo:
+
+ user01@maq01:~$ whereis find
+
+   Retorno do comando:
+
+ find: /usr/bin/find /usr/bin/X11/find /usr/share/man/man1/find.1.gz
+
+        Comando COMPGEN:
+        Gerar correspondências possíveis de conclusão para a palavra de acordo
+        com a opção.
+
+   Lista todos os comandos do seu sistema ou pesquisa por um determinado
+   comando: compgen -c | grep find
+   Exemplo:
+
+ user01@maq01:~$ compgen -c | grep find
+
+   Retorno do comando:
+
+ oldfind
+ ippfind
+ find
+ memdiskfind
+ gst-typefind-0.10
+ sane-find-scanner
+ find2perl
+ gst-typefind-1.0
+ findhyph
+ findfs
+ findmnt
+
+        Comando WHO ou W:
+        Mostra quem está logado no sistema.
+
+   Exemplo:
+
+ user01@maq01:~$ w
+
+   Retorno do comando:
+
+ 12:00:00 up 1 day,  3:25,  3 users,  load average: 0,16, 0,19, 0,20
+ USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
+ user01  :0       :0               Seg08   ?xdm?   1:34m  0.28s init --user
+ user01  pts/0    :0               Seg08   24:00m  0.08s  0.02s ssh xx.xx.exemplo.br
+ user01  pts/8    :0               Seg08    0.00s  1.30s  0.00s w
+
+   Exemplo:
+
+ user01@maq01:~$ who
+
+   Retorno do comando:
+
+ user01  :0           2014-11-03 08:35 (:0)
+ user01  pts/0        2014-11-03 08:38 (:0)
+ user01  pts/8        2014-11-03 08:59 (:0)
+
+        Comando DU:
+        É utilizado para saber o espaço utilizado em disco, por pastas ou
+        arquivos.
+
+   Diretórios que estão consumindo espaço no seu HD.
+   Exemplo:
+
+ user01@maq01:/$ sudo du -sch *
+
+   Retorno do comando:
+
+ 9,8M    bin
+ 150M    boot
+ 14M    etc
+ 17G    home
+ 573M    opt
+ 56K    root
+ 216K    tmp
+ 4,6G    usr
+ 2,4G    var
+ 26G    total
+
+        Comando cat /etc/redhat-release:
+        Identifica a distro que está sendo utilizada. No caso Distro baseado em
+        RedHat.
+
+   Exemplo:
+
+ # cat /etc/redhat-release
+
+   Retorno do comando:
+
+ CentOS release 6.6 (Final)
+
+        Comando LSB-RELEASE:
+        Identificar a distro que esta usando, Distro baseado em Debian.
+
+   Exemplo:
+
+ user01@maq01:~$ lsb_release -a
+
+   Retorno do comando:
+
+ Distributor ID:    Ubuntu
+ Description:    Ubuntu 14.04.1 LTS
+ Release:    14.04
+ Codename:    trusty
+
+   A implementação de soluções de IDS/IPS, Firewalls, Antivírus e politicas
+   de segurança são bem-vindos na medida do possível. Mantenha o seu
+   servidores/softwares atualizados e não partilhe as suas passwords.
+
+        Referências:
+        http://www.sans.org/reading-room/whitepapers/logging/ Análise Forense
+        Computacional de Logs em Sistemas Linux: as testemunhas da rede
+        http://tutorfreebr.blogspot.com.br/2012/05/onde-estao-os-arquivos-de-log-registros.html
+        http://www.linuxdescomplicado.com.br/2013/11/20-comandos-linux-que-voce-talvez-nao.html
+        http://www.ibm.com/developerworks/br/linux/library/l-lpic1-v3-104-7/
+
+    Related Posts
+
+   ssh “Are you sure you want to continue connecting”
+
+  ssh “Are you sure you want to continue connecting”
+
+   7 de abril de 20227 de abril de 2022
+
+   Exibir LUNs conectadas no Linux
+
+  Exibir LUNs conectadas no Linux
+
+   31 de março de 202231 de março de 2022
+
+   Alterando usuário do Mysql / Mariadb
+
+  Alterando usuário do Mysql / Mariadb
+
+   16 de fevereiro de 202216 de fevereiro de 2022
+
+Navegação de Post
+
+   Previous Article Gerenciando switch’s 3com e HP via Linha de comando
+   Next Article Script bat para instala impressora e colocar como padrão
+
+    About admin
+
+   View all posts by admin →
+   Pesquisar por: _____________________  [ Pesquisar ]
+
+    Posts recentes
+
+     * ssh “Are you sure you want to continue connecting”
+     * Exibir LUNs conectadas no Linux
+     * Alterando usuário do Mysql / Mariadb
+     * DNS Search no Debian 11
+     * Como fica alguns comandos do Mysql no PostgreSql
+
+    Comentários
+
+    Arquivos
+
+     * abril 2022
+     * março 2022
+     * fevereiro 2022
+     * janeiro 2022
+     * novembro 2021
+     * outubro 2021
+     * setembro 2021
+     * agosto 2021
+     * julho 2021
+     * fevereiro 2021
+     * abril 2020
+     * março 2020
+     * janeiro 2020
+     * dezembro 2019
+     * novembro 2019
+     * agosto 2019
+     * abril 2019
+     * março 2019
+     * fevereiro 2019
+     * junho 2018
+     * abril 2018
+     * março 2018
+     * fevereiro 2018
+     * janeiro 2018
+     * novembro 2017
+     * outubro 2017
+     * fevereiro 2017
+     * abril 2016
+     * janeiro 2016
+     * novembro 2015
+     * outubro 2015
+     * setembro 2015
+     * agosto 2015
+     * julho 2015
+     * abril 2015
+     * março 2015
+     * fevereiro 2015
+
+    Categorias
+
+     * Artigos
+          * Linux
+          * Outros
+          * Redes
+               * Cisco
+          * Web
+          * Windows
+
+    Meta
+
+     * Acessar
+     * Feed de posts
+     * Feed de comentários
+     * WordPress.org
+   Copyright © 2022 GA Tech.
+   Powered by WordPress and HitMag.

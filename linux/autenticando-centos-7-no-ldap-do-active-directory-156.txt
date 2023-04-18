@@ -1,0 +1,355 @@
+   Link: profile
+   Link: canonical
+   Link: shortlink
+   Skip to content
+   14 de julho de 2022
+
+   GA Tech
+
+   Um guia rápido para algumas situações de informática
+
+     * Home
+     * Linux
+     * Windows
+     * Web
+     * Outros
+     * Redes
+          * Cisco
+   Pesquisar por: _____________________  [ Pesquisar ]
+   Main Menu
+   Linux
+
+               Autenticando Centos 7 no LDAP do Active Directory
+
+   6 de novembro de 20176 de novembro de 2017 - by admin
+
+   Instalar os seguintes pacotes:
+
+   # yum install nss-pam-ldapd krb5-workstation pam_krb5 nscd
+   openldap-clients oddjob-mkhomedir
+
+   Testando consulta ldap no servidor AD do Windows:
+
+   # ldapsearch -x -h srvad.guilhermearaujo.com.br -D cn=”GA
+   Tech”,ou=usuarios,dc=guilhermearaujo,dc=com,dc=br -W -b
+   dc=guilhermearaujo,dc=com,dc=br -s sub “sAMAccountNAme=userteste”
+
+   A consulta deve retornar as informações no AD do usuário “userteste” no
+   formato LDIF. Como o linux trabalho com formato de usuário do tipo Posix,
+   alguns campos do AD deverão obrigatoriamente estar preenchidos. São eles:
+   uidNumber, gidNumber, unixHomeDirectory, loginShell. No AD basta modificar
+   esses valores na aba “Editor de Atributos”, ou via ldapmodify, parecido
+   com o ldapsearch. O gidNumber faz referencia a um grupo que o usuário
+   pertence, então o mesmo número devera constar no grupo.
+
+   Seria muito ruim ter que entrar usuário por usuário e alterar os campos
+   mencionados acima. Então no arquivo nslcd.conf vamos ajustar os valores
+   através de mapeamento. (Pelo menos o gidNumber do grupo deverá ser
+   acrescentado)
+
+   Edit: vim vim /etc/nslcd.conf
+
+   # Inicio do arquivo
+
+   # Versao LDAP
+   ldap_version 3
+   # Usuario e grupo para executar o daemon
+   uid nslcd
+   gid ldap
+   # Limite de timeout de bind e de busca
+   bind_timelimit 30
+   timelimit 30
+
+   # Servidor LDAP e BaseDN
+   uri ldap://srvad.guilhermearaujo.com.br
+   base DC=GUILHERMEARAUJO,DC=COM,DC=BR
+
+   # O SSL ainda não será configurado
+   ssl no
+   tls_cacertdir /etc/openldap/cacerts
+
+   # usuário e senha de serviço
+   binddn cn=admin,ou=Usuarios,dc=guilhermearaujo,dc=com,dc=br
+   bindpw 123456
+   #
+   scope sub
+   scope group sub
+   scope hosts sub
+
+   # Ignorar lookup de grupos para os usuários de sistema
+   nss_initgroups_ignoreusers root,nslcd,bin,daemon,mail,nobody,sshd,nscd,ntp
+
+   # Caso seja necessário algum filtro, para apenas algum usuário de algum
+   grupo logar
+   # # pam_authz_search (gidNumber=10000)
+
+   # # Configuracoes de Mapping – AD
+   pagesize 1000
+   referrals off
+
+   # Podera fazer filtros avançados
+   filter passwd (&(objectClass=user)(!(objectClass=computer)))
+
+   # Mapeando valores e atribuindo outros
+
+   map passwd uid sAMAccountName
+   map passwd homeDirectory “/home/$sAMAccountName”
+   map passwd gecos displayName
+   map passwd uidNumber employeeNumber
+   map passwd gidNumber “5000”
+   map passwd loginShell “/bin/bash”
+
+   filter shadow (&(objectClass=user)(!(objectClass=computer)))
+   map shadow uid sAMAccountName
+   map shadow shadowLastChange pwdLastSet
+   filter group (objectClass=group)
+
+   # Fim do arquivo
+
+   Na minha empresa o campo “employeeNumber” do AD é a matricula do
+   funcionário, como é um número que não se repete mapeamos ele para o
+   “uidNumber” no linux. Em seguida fixamos o número 5000 no gidNumber, o
+   mesmo números que acrescentamos no gidNumber do grupo do AD. Outra coisa
+   que fixamos é o shell que o usuário terá ao logar.
+
+   Agora configuramos o Kerberos. Alterar o arquivo /etc/krb5.conf
+
+   # Inicio do arquivo
+
+   # Configuration snippets may be placed in this directory as well
+   includedir /etc/krb5.conf.d/
+
+   # Nao validar o hostname do servidor (senao precisa de entradas no DNS e
+   Reverso)
+   [appdefaults]
+   validate = false
+   #
+   ## Locais de Logging
+   [logging]
+   default = FILE:/var/log/krb5libs.log
+   kdc = FILE:/var/log/krb5kdc.log
+   admin_server = FILE:/var/log/kadmind.log
+
+   ## Configuracoes Padrao
+   [libdefaults]
+   default_realm = GUILHERMEARAUJO.COM.BR
+   dns_lookup_realm = false
+   dns_lookup_kdc = false
+   ticket_lifetime = 24h
+   renew_lifetime = 7d
+   forwardable = true
+
+   [realms]
+   # Configuracao do servidor de KERBEROS
+   # Utilizando o nome do DOMINIO, ele vai para o DC
+   GUILHERMEARAUJO.COM.BR = {
+   kdc = srvad.guilhermearaujo.com.br
+   admin_server = srvad.guilhermearaujo.com.br
+   }
+
+   [domain_realm]
+   .guilhermearaujo.com.br = GUILHERMEARAUJO.COM.BR
+   guilhermearaujo.com.br = GUILHERMEARAUJO.COM.BR
+
+   # Fim do arquivo
+
+   Tentando o kerberos, não é pra retornar nada:
+
+   # kinit admin
+
+   Verificando tickit do kerberos
+
+   # klist
+
+   Altere o arquivo /etc/nsswitch.conf, encontre as linha a baixo e
+   acrescente ldap:
+
+   passwd: files ldap
+   shadow: files ldap
+   group: files ldap
+
+   Iniciando e habilitando serviços no boot
+
+   # systemctl enable nscd
+   # systemctl start nscd
+
+   # systemctl enable nslcd
+   # systemctl start nslcd
+
+   # systemctl enable oddjobd
+   # systemctl start oddjobd
+
+   Realize um teste buscando um usuario do AD:
+
+   # getent passwd guilherme
+   gcosta:*:31676:5000:GA Tech:/home/FCM/gcosta:/bin/bash
+
+   Se retornar informações parecido com a linha a cima porque deu certo.
+
+   Configure os aquivos do “PAM” para autenticação:
+   Edite o arquivo /etc/pam.d/system-auth:
+
+   # Inicio do arquivo
+   auth required pam_env.so
+   auth required pam_faildelay.so delay=2000000
+   auth sufficient pam_unix.so nullok try_first_pass
+   auth requisite pam_succeed_if.so uid >= 1000 quiet_success
+   auth sufficient pam_krb5.so use_first_pass
+   auth required pam_deny.so
+
+   account required pam_unix.so broken_shadow
+   account sufficient pam_localuser.so
+   account sufficient pam_succeed_if.so uid < 1000 quiet account [default=bad
+   success=ok user_unknown=ignore] pam_krb5.so account required pam_permit.so
+   password requisite pam_pwquality.so try_first_pass local_users_only
+   retry=3 authtok_type= password sufficient pam_unix.so sha512 shadow nullok
+   try_first_pass use_authtok password sufficient pam_krb5.so use_authtok
+   password required pam_deny.so session optional pam_keyinit.so revoke
+   session required pam_limits.so -session optional pam_systemd.so session
+   optional pam_oddjob_mkhomedir.so umask=0077 session [success=1
+   default=ignore] pam_succeed_if.so service in crond quiet use_uid session
+   required pam_unix.so session optional pam_krb5.so # Fim do arquivo Edite o
+   arquivo /etc/pam.d/ssh: # Inicio de arquivo auth required pam_env.so auth
+   required pam_faildelay.so delay=2000000 auth sufficient pam_unix.so nullok
+   try_first_pass auth requisite pam_succeed_if.so uid >= 1000 quiet_success
+   auth sufficient pam_krb5.so use_first_pass
+   auth required pam_deny.so
+
+   account required pam_unix.so broken_shadow
+   account sufficient pam_localuser.so
+   account sufficient pam_succeed_if.so uid < 1000 quiet
+   account [default=bad success=ok user_unknown=ignore] pam_krb5.so
+   account required pam_permit.so
+
+   password requisite pam_pwquality.so try_first_pass local_users_only
+   retry=3 authtok_type=
+   password sufficient pam_unix.so sha512 shadow nullok try_first_pass
+   use_authtok
+   password sufficient pam_krb5.so use_authtok
+   password required pam_deny.so
+
+   session optional pam_keyinit.so revoke
+   session required pam_limits.so
+   -session optional pam_systemd.so
+   session optional pam_oddjob_mkhomedir.so umask=0077
+   session [success=1 default=ignore] pam_succeed_if.so service in crond
+   quiet use_uid
+   session required pam_unix.so
+   session optional pam_krb5.so
+
+   # Fim do arquivo
+
+   Basicamente foram acrescentados as linhas com pam_krb5.so e
+   pam_oddjob_mkhomedir.so.
+
+   Reinicie o sistema e tente logar com o usuário do AD.
+
+   Finalizando:
+   A parte de filtros e mapeamento no arquivo /etc/nslcd.conf podem ser
+   explorada para se adequar a cada ambiente. Um exemplo de filtro onde só
+   que está no grupo “SUPORTE” poderá logar neste servidor.
+
+   filter passwd
+   (&(objectClass=user)(!(objectClass=computer))(memberOf=CN=SUPORTE,OU=PERMIT_ACESSO,DC=guilhermearaujo,DC=com,DC=br))
+
+   TaggedActive DirectoryCentos 7LDAP
+
+    Related Posts
+
+   ssh “Are you sure you want to continue connecting”
+
+  ssh “Are you sure you want to continue connecting”
+
+   7 de abril de 20227 de abril de 2022
+
+   Exibir LUNs conectadas no Linux
+
+  Exibir LUNs conectadas no Linux
+
+   31 de março de 202231 de março de 2022
+
+   Alterando usuário do Mysql / Mariadb
+
+  Alterando usuário do Mysql / Mariadb
+
+   16 de fevereiro de 202216 de fevereiro de 2022
+
+Navegação de Post
+
+   Previous Article Configurar encaminhamento de log no Switch HP sistema
+   Provision(Procurve)
+   Next Article Criar uma lista sequencial de ip no shell
+
+    About admin
+
+   View all posts by admin →
+   Pesquisar por: _____________________  [ Pesquisar ]
+
+    Posts recentes
+
+     * ssh “Are you sure you want to continue connecting”
+     * Exibir LUNs conectadas no Linux
+     * Alterando usuário do Mysql / Mariadb
+     * DNS Search no Debian 11
+     * Como fica alguns comandos do Mysql no PostgreSql
+
+    Comentários
+
+    Arquivos
+
+     * abril 2022
+     * março 2022
+     * fevereiro 2022
+     * janeiro 2022
+     * novembro 2021
+     * outubro 2021
+     * setembro 2021
+     * agosto 2021
+     * julho 2021
+     * fevereiro 2021
+     * abril 2020
+     * março 2020
+     * janeiro 2020
+     * dezembro 2019
+     * novembro 2019
+     * agosto 2019
+     * abril 2019
+     * março 2019
+     * fevereiro 2019
+     * junho 2018
+     * abril 2018
+     * março 2018
+     * fevereiro 2018
+     * janeiro 2018
+     * novembro 2017
+     * outubro 2017
+     * fevereiro 2017
+     * abril 2016
+     * janeiro 2016
+     * novembro 2015
+     * outubro 2015
+     * setembro 2015
+     * agosto 2015
+     * julho 2015
+     * abril 2015
+     * março 2015
+     * fevereiro 2015
+
+    Categorias
+
+     * Artigos
+          * Linux
+          * Outros
+          * Redes
+               * Cisco
+          * Web
+          * Windows
+
+    Meta
+
+     * Acessar
+     * Feed de posts
+     * Feed de comentários
+     * WordPress.org
+   Copyright © 2022 GA Tech.
+   Powered by WordPress and HitMag.

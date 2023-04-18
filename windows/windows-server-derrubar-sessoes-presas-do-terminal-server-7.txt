@@ -1,0 +1,196 @@
+   Link: profile
+   Link: canonical
+   Link: shortlink
+   Skip to content
+   14 de julho de 2022
+
+   GA Tech
+
+   Um guia rápido para algumas situações de informática
+
+     * Home
+     * Linux
+     * Windows
+     * Web
+     * Outros
+     * Redes
+          * Cisco
+   Pesquisar por: _____________________  [ Pesquisar ]
+   Main Menu
+   Windows
+
+          Windows Server – Derrubar sessões presas do Terminal Server
+
+   18 de fevereiro de 201518 de fevereiro de 2015 - by admin
+   [IMG]
+
+   Para vocês Administradores de redes ou Analistas de suporte que acessam os
+   serviços de Terminal Services diariamente, quem nunca teve problemas com
+   sessões de terminal presas?
+
+   terminal server
+
+   Através de um outro Servidor no domínio (controlador de domínio) logado
+   com credenciais administrativas, abra o prompt de comando e digite o
+   seguinte comando:
+
+   query session /server:nome_do_servidor
+
+   Substitua o nome_do_servidor pelo servidor que deseja desprender as
+   sessões.
+
+   terminalserver2
+
+   Este comando mostra quais as sessões que se encontram no Servidor com a
+   sessão presa. Usaremos o número do ID para desprender uma determinada
+   sessão através do seguinte comando:
+
+   reset session id_da_sessao /server:nome_do_servidor
+
+   terminalserver3
+
+    
+
+   Com o primeiro comando novamente você verifica se as sessões presas foram
+   resetadas:
+
+   terminalserver4
+
+        Fonte: http://aldoalvesti.wordpress.com
+
+   Mostrarei agora com utilizar o Gerenciador de Serviços de Terminal para
+   realizar o mesmo procedimento:
+   No Servidor (controlador de domínio), acesse o menu Ferramentas
+   administrativas e em seguida Gerenciador de Serviços de terminal:
+
+   terminalserver5
+
+    
+
+   No Gerenciador de Serviços de terminal clique com o botão direito do mouse
+   em cima do dominio e depois em Conectar-se ao computador…
+
+   terminalserver6
+
+    
+
+   Coloque o nome do servidor que deseja conectar-se.
+
+   terminalserver7
+
+   O painel direito mostrara todas as pessoas conectadas no servidor remoto.
+   Para desconectar um usuário basta clicar com o direito em cima do nome e
+   fazer o logoff.
+
+    
+
+   terminalserver8
+
+    
+
+   Desta forma você pode desprender usuários que ficaram presos em sua
+   sessão.
+
+    
+
+    
+
+   TaggedsessõesTerminal ServerWindows Server
+
+    Related Posts
+
+   Alterar Atributo Flags de usuário do AD
+
+  Alterar Atributo Flags de usuário do AD
+
+   24 de setembro de 202124 de setembro de 2021
+
+   Gpresult no computador remoto
+
+  Gpresult no computador remoto
+
+   31 de agosto de 202131 de agosto de 2021
+
+   [IMG]
+
+  Set-AdUser e get-AdUser exemplos PowerSheel AD
+
+   9 de fevereiro de 20219 de fevereiro de 2021
+
+Navegação de Post
+
+   Next Article Conectando ao servidor AD via PowerShell
+
+    About admin
+
+   View all posts by admin →
+   Pesquisar por: _____________________  [ Pesquisar ]
+
+    Posts recentes
+
+     * ssh “Are you sure you want to continue connecting”
+     * Exibir LUNs conectadas no Linux
+     * Alterando usuário do Mysql / Mariadb
+     * DNS Search no Debian 11
+     * Como fica alguns comandos do Mysql no PostgreSql
+
+    Comentários
+
+    Arquivos
+
+     * abril 2022
+     * março 2022
+     * fevereiro 2022
+     * janeiro 2022
+     * novembro 2021
+     * outubro 2021
+     * setembro 2021
+     * agosto 2021
+     * julho 2021
+     * fevereiro 2021
+     * abril 2020
+     * março 2020
+     * janeiro 2020
+     * dezembro 2019
+     * novembro 2019
+     * agosto 2019
+     * abril 2019
+     * março 2019
+     * fevereiro 2019
+     * junho 2018
+     * abril 2018
+     * março 2018
+     * fevereiro 2018
+     * janeiro 2018
+     * novembro 2017
+     * outubro 2017
+     * fevereiro 2017
+     * abril 2016
+     * janeiro 2016
+     * novembro 2015
+     * outubro 2015
+     * setembro 2015
+     * agosto 2015
+     * julho 2015
+     * abril 2015
+     * março 2015
+     * fevereiro 2015
+
+    Categorias
+
+     * Artigos
+          * Linux
+          * Outros
+          * Redes
+               * Cisco
+          * Web
+          * Windows
+
+    Meta
+
+     * Acessar
+     * Feed de posts
+     * Feed de comentários
+     * WordPress.org
+   Copyright © 2022 GA Tech.
+   Powered by WordPress and HitMag.

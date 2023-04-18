@@ -1,0 +1,178 @@
+   Link: profile
+   Link: canonical
+   Link: shortlink
+   Skip to content
+   14 de julho de 2022
+
+   GA Tech
+
+   Um guia rápido para algumas situações de informática
+
+     * Home
+     * Linux
+     * Windows
+     * Web
+     * Outros
+     * Redes
+          * Cisco
+   Pesquisar por: _____________________  [ Pesquisar ]
+   Main Menu
+   Linux
+
+                              Acesso fácil no ssh
+
+   29 de setembro de 201529 de setembro de 2015 - by admin
+
+   Muitos administradores de rede necessitam logar em diversos equipamentos
+   via ssh e geralmente tem-se que especificar parâmetros como usuário, ip,
+   porta, etc.
+
+   Pra facilitar a vida podemos simplificar isto em uma simples comando.  Por
+   exemplo para conectar em um servidor usamos:
+
+   $ ssh -l root -p 1022 192.168.1.1
+
+   Vamos simplificar esta linha de modo que digitaremos “ssh servidor1”  e o
+   ssh já saberá que você quer se conectar no servidor ip 192.168.1.1 com o
+   usuário root na porta 1022.
+
+   Em seu computador linux crie um arquivo chamado config na pasta .ssh:
+
+   $ touch /home/guilherme/.ssh/config
+
+   Edite o arquivo config da seguinte forma:
+
+ Host servidor1
+     hostname 192.168.1.1
+     user root
+     port 1022
+
+
+   Pronto, agora no terminal digite:
+
+   $ ssh servidor1
+
+    
+
+   Podemos fazer isso para quantas conexões forem necessária:
+
+    
+
+ Host servidor1
+     hostname 192.168.1.1
+     user root
+     port 1022
+
+ Host servidor2
+     hostname 192.168.1.2
+     user root
+     port 22
+     forwardx11 yes
+
+
+   _
+
+   Se quiser saber mais dá uma olhada neste link
+
+    
+
+   Taggedconfigssh
+
+    Related Posts
+
+   ssh “Are you sure you want to continue connecting”
+
+  ssh “Are you sure you want to continue connecting”
+
+   7 de abril de 20227 de abril de 2022
+
+   Exibir LUNs conectadas no Linux
+
+  Exibir LUNs conectadas no Linux
+
+   31 de março de 202231 de março de 2022
+
+   Alterando usuário do Mysql / Mariadb
+
+  Alterando usuário do Mysql / Mariadb
+
+   16 de fevereiro de 202216 de fevereiro de 2022
+
+Navegação de Post
+
+   Previous Article Matar todos processos de um usuário linux
+   Next Article Habilitar encaminhamento de pacotes no linux
+
+    About admin
+
+   View all posts by admin →
+   Pesquisar por: _____________________  [ Pesquisar ]
+
+    Posts recentes
+
+     * ssh “Are you sure you want to continue connecting”
+     * Exibir LUNs conectadas no Linux
+     * Alterando usuário do Mysql / Mariadb
+     * DNS Search no Debian 11
+     * Como fica alguns comandos do Mysql no PostgreSql
+
+    Comentários
+
+    Arquivos
+
+     * abril 2022
+     * março 2022
+     * fevereiro 2022
+     * janeiro 2022
+     * novembro 2021
+     * outubro 2021
+     * setembro 2021
+     * agosto 2021
+     * julho 2021
+     * fevereiro 2021
+     * abril 2020
+     * março 2020
+     * janeiro 2020
+     * dezembro 2019
+     * novembro 2019
+     * agosto 2019
+     * abril 2019
+     * março 2019
+     * fevereiro 2019
+     * junho 2018
+     * abril 2018
+     * março 2018
+     * fevereiro 2018
+     * janeiro 2018
+     * novembro 2017
+     * outubro 2017
+     * fevereiro 2017
+     * abril 2016
+     * janeiro 2016
+     * novembro 2015
+     * outubro 2015
+     * setembro 2015
+     * agosto 2015
+     * julho 2015
+     * abril 2015
+     * março 2015
+     * fevereiro 2015
+
+    Categorias
+
+     * Artigos
+          * Linux
+          * Outros
+          * Redes
+               * Cisco
+          * Web
+          * Windows
+
+    Meta
+
+     * Acessar
+     * Feed de posts
+     * Feed de comentários
+     * WordPress.org
+   Copyright © 2022 GA Tech.
+   Powered by WordPress and HitMag.

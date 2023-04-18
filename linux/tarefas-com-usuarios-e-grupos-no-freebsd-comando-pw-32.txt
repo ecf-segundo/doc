@@ -1,0 +1,259 @@
+   Link: profile
+   Link: canonical
+   Link: shortlink
+   Skip to content
+   14 de julho de 2022
+
+   GA Tech
+
+   Um guia rápido para algumas situações de informática
+
+     * Home
+     * Linux
+     * Windows
+     * Web
+     * Outros
+     * Redes
+          * Cisco
+   Pesquisar por: _____________________  [ Pesquisar ]
+   Main Menu
+   Linux
+
+             Tarefas com Usuários e Grupos no FreeBSD – Comando PW
+
+   13 de março de 201513 de março de 2015 - by admin
+   [IMG]
+
+   Para criar usuários e grupos utilizamos o comando “pw”, cuja função básica
+   é trabalhar nos arquivos /etc/passwd, /etc/master.passwd e /etc/group,
+   criando, removendo, modificando ou exibindo usuários e grupos do sistema.
+   Segue abaixo uma explanação geral de como utilizar tal comando, mas é
+   importante lembrar que muitas opções foram omitidas devido a grande
+   quantidade, sendo por isso importante a leitura do manual, através de “man
+   pw”.
+   Qualquer operação efetuada através do comando pw será registrada em um
+   arquivo de log, localizado em /var/log/userlog.
+
+   Para trabalhar com grupos, utilizamos o comando “pw group”, seguido de
+   “add”, “del”, “mod”, “show” ou “next”. Segue uma explicação sobre essas
+   opções:
+
+   add -> adicionar um novo grupo
+   del -> remover um grupo
+   mod -> modificar algum dado do grupo
+   show -> exibir os dados de um grupo
+   next -> mostra o próximo GID livre
+
+   O comando “pw group add” permite ainda outros parâmetros, listaremos os
+   mais importantes:
+
+   -n “nome”-> nome do grupo (o -n pode ser omitido)
+   -g 2000 -> GID (Group ID) do grupo
+
+   O comando “pw group mod” permite além dos já citados, o seguinte
+   parâmetro:
+
+   -l “nome”-> novo nome do grupo, caso queiramos alterar o nome
+
+   Parâmetros do “pw group show”:
+
+   -P -> saída em formato mais legível
+   -a -> lista todos os grupos
+
+   Exemplos:
+
+   Simplesmente adicionar o grupo1:
+
+   # pw group add grupo1
+
+   Adicionar o grupo2, com gid=1500:
+
+   # pw group add -n “grupo2” -g 1500
+
+   Exibir os dados do grupo2:
+
+   # pw group show grupo2 -P
+
+   Remover o grupo1:
+
+   # pw group del grupo1
+
+   Para trabalhar no contexto de usuários, utilizamos “pw user”, seguido de
+   “add”, “del”, “mod”, “show”, “next”, “lock” ou “unlock”, e seguido de
+   outros parâmetros, quando for necessário.
+
+   add -> adicionar um novo usuário
+   del -> remover um usuário
+   mod -> modificar algum dado do usuário
+   show -> exibir os dados de um usuário
+   next -> mostra os próximos UID e GID livres
+   lock -> bloquear a conta do usuário
+   unlock -> desbloquear a conta do usuário
+
+   Os comandos “pw user add” (para adicionar um usuário) e “pw user mod”
+   (para modificar os dados de um usuário) permitem os seguintes parâmetros
+   (estão listados apenas os essenciais):
+
+   -n “username” -> nome (username) do usuário (o -n pode ser omitido)
+   -c “comentário” -> comentário, que tradicionalmente contém quatro campos
+   separados por vírgulas: nome completo, localização, fone comercial e fone
+   residencial. Essa sintaxe não precisa ser desta forma, sendo a seu
+   critério.
+   -u 1500 -> UID (User ID) do usuário
+   -g “grupo” -> grupo ao qual o usuário irá pertencer, pode ser especificado
+   o nome do grupo ou o GID.
+   -d “/home/fulano” -> diretório home do usuário
+   -m -> cria o diretório home do usuário automaticamente
+   -s “/usr/local/bin/bash” -> define o shell do usuário
+
+   Os parâmetros do comando “pw user del” são:
+
+   -n “username”-> nome (username) do usuário (o -n pode ser omitido)
+   -u 1500 -> UID do usuário
+   -r -> Remove também o diretório home do usuário e o seu conteúdo
+
+   Os principais parâmetros adicionais do “pw user show” são:
+
+   -P -> saída em formato mais legível
+   -a -> lista todos os usuários
+
+   O comando “pw user lock” funciona adicionando a string *LOCKED* na frente
+   da senha do usuário, no arquivo master.passwd. Desta forma, o usuário não
+   conseguirá autenticar-se e nem efetuar qualquer operação. Para
+   desbloquear, basta usar o comando “pw user unlock”, especificando o
+   username ou o UID do usuário.
+
+   Exemplos:
+
+   Simplesmente adicionar um usuário com username fulano1:
+
+   # pw user add fulano1
+
+   Adicionar um usuário com username fulano2, comentário “Fulano 2”, UID
+   1500, GID 2000, diretório home “/home/fulano2” e shell “/bin/sh”:
+
+   # pw user add -n “fulano2” -c “Fulano 2” -u 1500 -g 2000 -d
+   “/home/fulano2”-m -s “/bin/sh”
+
+   Modificar o shell do usuário fulano2 para “/usr/local/bin/bash”:
+
+   # pw user mod fulano2 -s “/usr/local/bin/bash”
+
+   Exibir uma listagem de todos os usuários:
+
+   # pw user show -P -a
+
+   Bloquear a conta do usuário fulano2:
+
+   # pw user lock fulano2
+
+   Remover o usuário fulano1, juntamente com seu diretório home:
+
+   # pw user del fulano1 -r
+
+   Para efetuar a troca de senha de qualquer usuário, via linha de comando,
+   deve ser utilizado o comando passwd. O usuário root pode trocar a senha de
+   qualquer usuário, já os usuários comuns podem apenas trocar a própria
+   senha. A sintaxe do comando é “passwd fulano”.
+
+   Fonte: http://www.paim.pro.br
+
+    Related Posts
+
+   ssh “Are you sure you want to continue connecting”
+
+  ssh “Are you sure you want to continue connecting”
+
+   7 de abril de 20227 de abril de 2022
+
+   Exibir LUNs conectadas no Linux
+
+  Exibir LUNs conectadas no Linux
+
+   31 de março de 202231 de março de 2022
+
+   Alterando usuário do Mysql / Mariadb
+
+  Alterando usuário do Mysql / Mariadb
+
+   16 de fevereiro de 202216 de fevereiro de 2022
+
+Navegação de Post
+
+   Previous Article Descobrir usuário que está conectado no computador
+   Windows
+   Next Article Derrubar a sessão de um usuário no linux
+
+    About admin
+
+   View all posts by admin →
+   Pesquisar por: _____________________  [ Pesquisar ]
+
+    Posts recentes
+
+     * ssh “Are you sure you want to continue connecting”
+     * Exibir LUNs conectadas no Linux
+     * Alterando usuário do Mysql / Mariadb
+     * DNS Search no Debian 11
+     * Como fica alguns comandos do Mysql no PostgreSql
+
+    Comentários
+
+    Arquivos
+
+     * abril 2022
+     * março 2022
+     * fevereiro 2022
+     * janeiro 2022
+     * novembro 2021
+     * outubro 2021
+     * setembro 2021
+     * agosto 2021
+     * julho 2021
+     * fevereiro 2021
+     * abril 2020
+     * março 2020
+     * janeiro 2020
+     * dezembro 2019
+     * novembro 2019
+     * agosto 2019
+     * abril 2019
+     * março 2019
+     * fevereiro 2019
+     * junho 2018
+     * abril 2018
+     * março 2018
+     * fevereiro 2018
+     * janeiro 2018
+     * novembro 2017
+     * outubro 2017
+     * fevereiro 2017
+     * abril 2016
+     * janeiro 2016
+     * novembro 2015
+     * outubro 2015
+     * setembro 2015
+     * agosto 2015
+     * julho 2015
+     * abril 2015
+     * março 2015
+     * fevereiro 2015
+
+    Categorias
+
+     * Artigos
+          * Linux
+          * Outros
+          * Redes
+               * Cisco
+          * Web
+          * Windows
+
+    Meta
+
+     * Acessar
+     * Feed de posts
+     * Feed de comentários
+     * WordPress.org
+   Copyright © 2022 GA Tech.
+   Powered by WordPress and HitMag.

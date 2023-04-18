@@ -1,0 +1,163 @@
+   Link: profile
+   Link: canonical
+   Link: shortlink
+   Skip to content
+   14 de julho de 2022
+
+   GA Tech
+
+   Um guia rápido para algumas situações de informática
+
+     * Home
+     * Linux
+     * Windows
+     * Web
+     * Outros
+     * Redes
+          * Cisco
+   Pesquisar por: _____________________  [ Pesquisar ]
+   Main Menu
+   Linux
+
+                  Acessar console de Switch Cisco/HP via Linux
+
+   24 de fevereiro de 201724 de fevereiro de 2017 - by admin
+   Console switch HP
+
+   Para acessar a switch Cisco ou HP utilizo um cabo console e um adaptador
+   para USB.
+
+   Cabo console e adaptador usbO programa utilizado é o gtkterm. Para
+   instalar no Debian:
+
+   $ sudo apt-get install gtkterm
+
+   Como root acesso o arquivo /root/.gtktermrc
+
+   Na linha “port” do arquivo coloque a porta que foi criada automaticamente,
+   no meu caso ficou assim:
+
+   port = /dev/ttyUSB0
+
+   Na linha speed altere para 9600 ou a velocidade especificada no seu switch
+   ou roteador.
+
+   speed = 9600
+
+   Salve o arquivo e abra o gtkterm
+
+   #gtkterm &
+
+   Pronto, você já estará na console do equipamento. (Aperte ENTER)
+
+   Console switch HP
+
+    
+
+    
+
+    
+
+    
+
+   Taggedciscoconsolelinuxswitch
+
+    Related Posts
+
+   ssh “Are you sure you want to continue connecting”
+
+  ssh “Are you sure you want to continue connecting”
+
+   7 de abril de 20227 de abril de 2022
+
+   Exibir LUNs conectadas no Linux
+
+  Exibir LUNs conectadas no Linux
+
+   31 de março de 202231 de março de 2022
+
+   Alterando usuário do Mysql / Mariadb
+
+  Alterando usuário do Mysql / Mariadb
+
+   16 de fevereiro de 202216 de fevereiro de 2022
+
+Navegação de Post
+
+   Previous Article Escondendo a Versão do HTTPD Apache
+   Next Article Configurar encaminhamento de log no Switch HP sistema
+   Provision(Procurve)
+
+    About admin
+
+   View all posts by admin →
+   Pesquisar por: _____________________  [ Pesquisar ]
+
+    Posts recentes
+
+     * ssh “Are you sure you want to continue connecting”
+     * Exibir LUNs conectadas no Linux
+     * Alterando usuário do Mysql / Mariadb
+     * DNS Search no Debian 11
+     * Como fica alguns comandos do Mysql no PostgreSql
+
+    Comentários
+
+    Arquivos
+
+     * abril 2022
+     * março 2022
+     * fevereiro 2022
+     * janeiro 2022
+     * novembro 2021
+     * outubro 2021
+     * setembro 2021
+     * agosto 2021
+     * julho 2021
+     * fevereiro 2021
+     * abril 2020
+     * março 2020
+     * janeiro 2020
+     * dezembro 2019
+     * novembro 2019
+     * agosto 2019
+     * abril 2019
+     * março 2019
+     * fevereiro 2019
+     * junho 2018
+     * abril 2018
+     * março 2018
+     * fevereiro 2018
+     * janeiro 2018
+     * novembro 2017
+     * outubro 2017
+     * fevereiro 2017
+     * abril 2016
+     * janeiro 2016
+     * novembro 2015
+     * outubro 2015
+     * setembro 2015
+     * agosto 2015
+     * julho 2015
+     * abril 2015
+     * março 2015
+     * fevereiro 2015
+
+    Categorias
+
+     * Artigos
+          * Linux
+          * Outros
+          * Redes
+               * Cisco
+          * Web
+          * Windows
+
+    Meta
+
+     * Acessar
+     * Feed de posts
+     * Feed de comentários
+     * WordPress.org
+   Copyright © 2022 GA Tech.
+   Powered by WordPress and HitMag.

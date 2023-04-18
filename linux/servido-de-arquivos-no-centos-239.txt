@@ -1,0 +1,260 @@
+   Link: profile
+   Link: canonical
+   Link: shortlink
+   Skip to content
+   14 de julho de 2022
+
+   GA Tech
+
+   Um guia rápido para algumas situações de informática
+
+     * Home
+     * Linux
+     * Windows
+     * Web
+     * Outros
+     * Redes
+          * Cisco
+   Pesquisar por: _____________________  [ Pesquisar ]
+   Main Menu
+   Linux
+
+                         Servido de arquivos no CentOS
+
+   5 de abril de 2018 - by admin
+
+   Criando servidor de arquivos linux para ser acessado no Windows
+
+     # yum -y install samba samba-client samba-common
+
+   Configurar o arquivo /etc/samba/smb.conf e criando primero uma pasta
+   publica.
+
+   Acrescente esta linha nas configurações globais
+
+     map to guest = bad user
+
+   No final do arquivo acrescente os parâmetros de compartilhamento, onde
+   “publica” é o nome do compartilhamento e “/publica/” é o caminho.
+
+     [publica]
+     path = /publica/
+     writable = yes
+     read only = no
+     guest ok = yes
+     browseable = yes
+
+   Use o seguinte comando para testar as configurações:
+
+     # testparm
+
+   Habilite o Samba para iniciar no boot e inicie o serviço:
+
+     # systemctl enable smb.service
+     # systemctl start smb.service
+
+   Liberando no Firewall
+
+     # firewall-cmd –permanent –zone=public –add-service=samba
+     # firewall-cmd –reload
+
+   Liberando no SELinux
+
+     # chcon -R -t samba_share_t /publica
+
+    
+
+   Criar um usuário sem HOMEDIR
+
+     # adduser -M jose
+     # adduser -M maria
+
+     # groupadd financeiro
+     # groupadd admin
+     # gpasswd -a jose financeiro
+     # gpasswd -a maria admin
+     # cd /
+     # mkdir financeiro
+     # mkdir admin
+     # chown root:financeiro /financeiro
+     # chown root:admin /admin
+     # chmod 770 admin
+     # chmod 770 financeiro
+
+    
+
+   Adicionar usuário ao samba
+
+     # smbpasswd -a jose
+
+     # smbpasswd -a maria
+
+   Configurar o arquivo /etc/samba/smb.conf para compartilhar as pastas:
+
+     [financeiro]
+     path = /financeiro/
+     read only = No
+     valid users = +financeiro #grupo que tera acesso
+
+     [admin]
+     path = /admin/
+     read only = No
+     valid users = +admin
+
+   Liberar pastas pelo SELinux e restartar o serviço
+
+     # chcon -R -t samba_share_t /financeiro
+     # chcon -R -t samba_share_t /admin
+
+     # systemctl restart smb.service
+
+  Lixeira
+
+   Os arquivos que são excluído da pasta compartilhada são permanentemente
+   excluídos. Podemos configurar uma Lixeira para reter esses arquivos por um
+   tempo e podemos recuperar o arquivo para seu lugar de origem.
+
+     # mkdir /lixeira
+     # chmod 777 /lixeira
+
+   Editar o arquivo /etc/samba/smb.conf
+
+     # Crie o compartilhamento da lixeira
+     [lixeira]
+     path = /lixeira/
+     writable = yes
+     read only = no
+     browseable = yes
+
+      
+
+     # em [global] indique os seguintes parâmetros
+
+     recycler:keeptree = yes
+     recycle:versions = yes
+     recycle:repository = /lixeira/
+     recycle:exclude = *.tmp;*.bkp
+
+   # Habilitar o recycle nos compartilhamentos desejados
+
+     [publica]
+     path = /publica/
+     writable = yes
+     read only = no
+     guest ok = yes
+     browseable = yes
+     vfs objects = recycle #Parâmetro que habilita a lixeira
+
+   Faça o teste. Infelizmente a forma de restaurar esses arquivos são copia
+   da pasta lixeira e colar na pasta novamente.
+
+  Proibir determinados arquivos
+
+   Bloquear extensões como .exe, .mp3, etc.
+
+   Edite o arquivo /etc/samba/smb/conf e coloque o seguinte parâmetro no
+   compartilhamento que gostaria de bloquear as extensões.
+
+     veto files = *.exe/*.com/*.bat
+
+   Taggedarquivoscompartilhamentosambasmbwindows
+
+    Related Posts
+
+   ssh “Are you sure you want to continue connecting”
+
+  ssh “Are you sure you want to continue connecting”
+
+   7 de abril de 20227 de abril de 2022
+
+   Exibir LUNs conectadas no Linux
+
+  Exibir LUNs conectadas no Linux
+
+   31 de março de 202231 de março de 2022
+
+   Alterando usuário do Mysql / Mariadb
+
+  Alterando usuário do Mysql / Mariadb
+
+   16 de fevereiro de 202216 de fevereiro de 2022
+
+Navegação de Post
+
+   Previous Article Desativando interface de rede via linha de comando no
+   Windows
+   Next Article Redirecionando log para servidor linux com rsyslog
+
+    About admin
+
+   View all posts by admin →
+   Pesquisar por: _____________________  [ Pesquisar ]
+
+    Posts recentes
+
+     * ssh “Are you sure you want to continue connecting”
+     * Exibir LUNs conectadas no Linux
+     * Alterando usuário do Mysql / Mariadb
+     * DNS Search no Debian 11
+     * Como fica alguns comandos do Mysql no PostgreSql
+
+    Comentários
+
+    Arquivos
+
+     * abril 2022
+     * março 2022
+     * fevereiro 2022
+     * janeiro 2022
+     * novembro 2021
+     * outubro 2021
+     * setembro 2021
+     * agosto 2021
+     * julho 2021
+     * fevereiro 2021
+     * abril 2020
+     * março 2020
+     * janeiro 2020
+     * dezembro 2019
+     * novembro 2019
+     * agosto 2019
+     * abril 2019
+     * março 2019
+     * fevereiro 2019
+     * junho 2018
+     * abril 2018
+     * março 2018
+     * fevereiro 2018
+     * janeiro 2018
+     * novembro 2017
+     * outubro 2017
+     * fevereiro 2017
+     * abril 2016
+     * janeiro 2016
+     * novembro 2015
+     * outubro 2015
+     * setembro 2015
+     * agosto 2015
+     * julho 2015
+     * abril 2015
+     * março 2015
+     * fevereiro 2015
+
+    Categorias
+
+     * Artigos
+          * Linux
+          * Outros
+          * Redes
+               * Cisco
+          * Web
+          * Windows
+
+    Meta
+
+     * Acessar
+     * Feed de posts
+     * Feed de comentários
+     * WordPress.org
+   Copyright © 2022 GA Tech.
+   Powered by WordPress and HitMag.

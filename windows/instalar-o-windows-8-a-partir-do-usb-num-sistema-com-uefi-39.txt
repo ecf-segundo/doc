@@ -1,0 +1,174 @@
+   Link: profile
+   Link: canonical
+   Link: shortlink
+   Skip to content
+   14 de julho de 2022
+
+   GA Tech
+
+   Um guia rápido para algumas situações de informática
+
+     * Home
+     * Linux
+     * Windows
+     * Web
+     * Outros
+     * Redes
+          * Cisco
+   Pesquisar por: _____________________  [ Pesquisar ]
+   Main Menu
+   Windows
+
+           Instalar o Windows 8 a partir do USB num sistema com UEFI
+
+   24 de março de 201524 de março de 2015 - by admin
+
+   1. Habilitar UEFI
+
+   Essa etapa varia de acordo com a BIOS do computador. A maioria dos novos
+   computadores (sejam notebooks, desktops ou servidores) vêm com os dois
+   sistemas – BIOS e UEFI.
+
+   Procure por Legacy ROM  (também conhecida como BIOS) para forçar o sistema
+   a entrar apenas com UEFI. Se necessário procure por UEFI para habilitar.
+
+    2. Preparar o pen drive USB
+
+   Depois de muito quebrar a cabeça e pesquisar mais ainda na internet, veio
+   a explicação (que, agora, soa bem óbvia): pen drives, por padrão, são
+   formatados usando o padrão MBR, que é o formato de partições usado e
+   reconhecido pelo BIOS. Sistemas UEFI, por outro lado, usam o formato GPT.
+   Logo, o “truque” é reformatar o pen drive no formato GPT.
+
+   Para isso, conecte seu pen drive e abra um prompt de comando elevado (os
+   exemplos abaixo foram feitos num sistema já com Windows 8, mas funcionam
+   também numa máquina com Windows 7).
+
+    1. Digite diskpart e depois digite list volume para localizar seu pen
+       drive:
+       uefi-pen-drive-4
+       Essa etapa é bem importante. Preste muita atenção no número do volume
+       do pen drive (no meu exemplo acima, é o número 5). Se você anotar o
+       número errado, pode apagar seu HD!
+    2. Agora apague o volume do pen drive. Sem isso, não é possível
+       reformatá-lo como GPT. Execute, na sequência, select volume
+       <volume-do-seu-pen-drive> e então delete volume override para apagar o
+       volume.
+       uefi-pen-drive-2
+    3. Agora, para podermos criar nossa partição GPT, é preciso primeiramente
+       converter o disco. Execute o comando convert gpt:
+       uefi-pen-drive-3
+    4. Agora podemos criar nossa partição. Ela deve ser primária e formatada
+       como FAT32. Para isso, execute os comandos create partition primary e
+       format fs=fat32 label=”Windows 8″ quick:
+       uefi-pen-drive-4
+    5. Agora seu pen drive está pronto! Copie o conteúdo da imagem ISO do
+       Windows 8 para dentro de seu pen drive, dê o boot e divirta-se com seu
+       novo computador!
+
+    3. Copiar o Windows para dentro do pen drive USB
+
+   Agora seu pen drive está pronto! Copie o conteúdo da imagem ISO do Windows
+   8 para dentro de seu pen drive (sim, é só copiar; não precisa fazer nada
+   de especial), dê o boot e divirta-se com seu novo computador!
+
+   Fonte: blog.lambda3.com.br
+
+    Related Posts
+
+   Alterar Atributo Flags de usuário do AD
+
+  Alterar Atributo Flags de usuário do AD
+
+   24 de setembro de 202124 de setembro de 2021
+
+   Gpresult no computador remoto
+
+  Gpresult no computador remoto
+
+   31 de agosto de 202131 de agosto de 2021
+
+   [IMG]
+
+  Set-AdUser e get-AdUser exemplos PowerSheel AD
+
+   9 de fevereiro de 20219 de fevereiro de 2021
+
+Navegação de Post
+
+   Previous Article Derrubar a sessão de um usuário no linux
+   Next Article Ingressar desktop GNU/Linux no domínio Active Directory
+
+    About admin
+
+   View all posts by admin →
+   Pesquisar por: _____________________  [ Pesquisar ]
+
+    Posts recentes
+
+     * ssh “Are you sure you want to continue connecting”
+     * Exibir LUNs conectadas no Linux
+     * Alterando usuário do Mysql / Mariadb
+     * DNS Search no Debian 11
+     * Como fica alguns comandos do Mysql no PostgreSql
+
+    Comentários
+
+    Arquivos
+
+     * abril 2022
+     * março 2022
+     * fevereiro 2022
+     * janeiro 2022
+     * novembro 2021
+     * outubro 2021
+     * setembro 2021
+     * agosto 2021
+     * julho 2021
+     * fevereiro 2021
+     * abril 2020
+     * março 2020
+     * janeiro 2020
+     * dezembro 2019
+     * novembro 2019
+     * agosto 2019
+     * abril 2019
+     * março 2019
+     * fevereiro 2019
+     * junho 2018
+     * abril 2018
+     * março 2018
+     * fevereiro 2018
+     * janeiro 2018
+     * novembro 2017
+     * outubro 2017
+     * fevereiro 2017
+     * abril 2016
+     * janeiro 2016
+     * novembro 2015
+     * outubro 2015
+     * setembro 2015
+     * agosto 2015
+     * julho 2015
+     * abril 2015
+     * março 2015
+     * fevereiro 2015
+
+    Categorias
+
+     * Artigos
+          * Linux
+          * Outros
+          * Redes
+               * Cisco
+          * Web
+          * Windows
+
+    Meta
+
+     * Acessar
+     * Feed de posts
+     * Feed de comentários
+     * WordPress.org
+   Copyright © 2022 GA Tech.
+   Powered by WordPress and HitMag.

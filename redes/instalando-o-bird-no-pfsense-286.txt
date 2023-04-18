@@ -1,0 +1,154 @@
+   Link: profile
+   Link: canonical
+   Link: shortlink
+   Skip to content
+   14 de julho de 2022
+
+   GA Tech
+
+   Um guia rápido para algumas situações de informática
+
+     * Home
+     * Linux
+     * Windows
+     * Web
+     * Outros
+     * Redes
+          * Cisco
+   Pesquisar por: _____________________  [ Pesquisar ]
+   Main Menu
+   Redes
+
+                          Instalando o BIRD no PFSense
+
+   10 de dezembro de 201910 de dezembro de 2019 - by admin
+
+   O Daemon BIRD, (Do acronimo BIRD Internet Routing
+   Daemon) é o Daemon usado para protocolos dinâmicos de roteamento utlizado
+   em distribuições Unix.
+
+   Instalação no PFSense:
+
+   Edite os arquivos:
+   /usr/local/etc/pkg/repos/pfSense.conf
+   /usr/local/etc/pkg/repos/FreeBSD.conf
+
+   Procure pela linha a baixo e troque “no” por “yes”.
+   FreeBSD: { enabled: yes }
+
+   # pkg update
+
+   INSTALANDO O BIRD 2.0
+
+   # pkg install bird2
+
+   Habilitar para subir serviço no boot
+
+                          vim /usr/local/etc/rc.d/bird
+
+   Edite a seguinte linha trocando “NO” por “YES”
+   : ${bird_enable=”YES”}
+   ln -s /usr/local/etc/rc.d/bird /usr/local/etc/rc.d/bird.sh
+
+   Edite o Arquivo de configuração e ative os recursos necessários no seu
+   ambiente.
+   /usr/local/etc/bird.conf
+
+    Related Posts
+
+   Console switch HP
+
+  Gerenciando switch’s 3com e HP via Linha de comando
+
+   22 de janeiro de 202016 de julho de 2020
+
+   [IMG]
+
+  Alguns comandos básicos de equipamentos Cisco
+
+   12 de março de 201813 de março de 2018
+
+   [IMG]
+
+  Como “resetar” as configurações do switch ou Roteador Cisco
+
+   12 de março de 201812 de março de 2018
+
+Navegação de Post
+
+   Previous Article Redirecionamento de site com apache ou nginx
+   Next Article Gerenciando vmware via CLI
+
+    About admin
+
+   View all posts by admin →
+   Pesquisar por: _____________________  [ Pesquisar ]
+
+    Posts recentes
+
+     * ssh “Are you sure you want to continue connecting”
+     * Exibir LUNs conectadas no Linux
+     * Alterando usuário do Mysql / Mariadb
+     * DNS Search no Debian 11
+     * Como fica alguns comandos do Mysql no PostgreSql
+
+    Comentários
+
+    Arquivos
+
+     * abril 2022
+     * março 2022
+     * fevereiro 2022
+     * janeiro 2022
+     * novembro 2021
+     * outubro 2021
+     * setembro 2021
+     * agosto 2021
+     * julho 2021
+     * fevereiro 2021
+     * abril 2020
+     * março 2020
+     * janeiro 2020
+     * dezembro 2019
+     * novembro 2019
+     * agosto 2019
+     * abril 2019
+     * março 2019
+     * fevereiro 2019
+     * junho 2018
+     * abril 2018
+     * março 2018
+     * fevereiro 2018
+     * janeiro 2018
+     * novembro 2017
+     * outubro 2017
+     * fevereiro 2017
+     * abril 2016
+     * janeiro 2016
+     * novembro 2015
+     * outubro 2015
+     * setembro 2015
+     * agosto 2015
+     * julho 2015
+     * abril 2015
+     * março 2015
+     * fevereiro 2015
+
+    Categorias
+
+     * Artigos
+          * Linux
+          * Outros
+          * Redes
+               * Cisco
+          * Web
+          * Windows
+
+    Meta
+
+     * Acessar
+     * Feed de posts
+     * Feed de comentários
+     * WordPress.org
+   Copyright © 2022 GA Tech.
+   Powered by WordPress and HitMag.

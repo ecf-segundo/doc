@@ -1,0 +1,479 @@
+   Link: profile
+   Link: canonical
+   Link: shortlink
+   Skip to content
+   14 de julho de 2022
+
+   GA Tech
+
+   Um guia rápido para algumas situações de informática
+
+     * Home
+     * Linux
+     * Windows
+     * Web
+     * Outros
+     * Redes
+          * Cisco
+   Pesquisar por: _____________________  [ Pesquisar ]
+   Main Menu
+   Linux
+
+            Ingressar desktop GNU/Linux no domínio Active Directory
+
+   30 de março de 20154 de novembro de 2015 - by admin
+
+   O objetivo do artigo é mostrar como ingressar um desktop com as
+   distribuições Debian no domínio Active Directory do Windows Server 2012.
+
+   Os procedimentos foram testado no Debian 7.
+
+   Pré-requisitos e finalidade de cada um para o trabalho
+   Antes de começar a trabalhar, é necessário saber quais são os serviços que
+   o desktop com o sistema GNU/Linux precisa ter rodando para ingressar no
+   domínio. Abaixo descrevo os serviços:
+
+   Kerberos
+   Winbind
+   Samba
+
+   Kerberos é um protocolo de rede usado para autenticação de usuários e/ou
+   serviços de rede, como o Active Directory. utilizando um sistema
+   criptografado, permitindo comunicações seguras e identificadas em redes,
+   fazendo uso de tickets (chaves criptografadas).
+
+   O Active Directory faz uso deste serviço para autenticação em rede, logo,
+   as máquinas clientes terão que ter informações do KDC (Centro de
+   Distribuição de Chaves) para autenticar-se no Active Directory.
+
+   O Winbind é um daemon usado pelo PAM, NSSWITCH, Samba e podendo ser usado
+   por outros serviços de rede e/ou sistema, fazendo a interface entre o PDC
+   e o computador cliente rodando o serviço Winbindd, permitindo que máquinas
+   com o sistema GNU/Linux comuniquem-se com DC Active Directory.
+
+   O Samba até a versão 3, que é a que será usada nesse artigo, é um serviço
+   cuja principal função é disponibilizar recursos compartilhados em uma
+   rede, tais como arquivos e impressoras. Mas será usado para autenticação
+   de usuários no servidor onde está rodando devido o winbind depender do
+   mesmo.
+
+   O mesmo faz uso de dois serviços, são NMB e SMB.
+
+   O serviço NMB tem a principal finalidade de resolução de nomes NetBIOS
+   para que o servidor Samba possa enxergar e ser enxergado pelas outras
+   máquinas. Então, este serviço permite a navegação pela rede, usando os
+   hostnames das máquinas e o acesso às mesmas em rede.
+
+   O serviço SMB permite compartilhar tais recursos e autenticar os usuários
+   no servidor Samba local, ou repassa as solicitações de autenticação para
+   outro computador, como um servidor controlador de domínio com o Active
+   Directory.
+
+   Considerações de ambiente de rede
+   No ambiente proposto no artigo, já existem os servidores DNS em execução
+   na rede, pois, para a autenticação ser feita, é necessário o uso do DNS e
+   o servidor com Active Directory configurado como controlador de domínio
+   principal já instalado e funcionando.
+
+   Veja a disposição dos servidores na rede para explicação do artigo:
+
+   Domínio → fcm.unicamp.br
+   Servidor DNS primário → 143.106.46.46
+   Servidor DNS Secundário → 143.106.2.5
+   Servidor controlador de domínio → 143.106.46.3 angelim.fcm.unicamp.br
+
+   Como os clientes serão configurados pelo serviço DHCP, só especificarei o
+   nome da máquina cliente:
+
+   Desktop cliente → nti98
+
+   __________________________________________
+
+   Arquivo /etc/hosts, instalação de pré-requisitos e Kerberos
+   Arquivo /etc/hosts
+   Nesta parte iremos editar o arquivo /etc/hosts incluindo uma alias para o
+   endereço do controlador de domínio e alterar o hostname do desktop cliente
+   (nti98), acrescentando o fqdn, ou seja, o nome do domínio junto ao
+   hostname da máquina cliente.
+
+   No entanto, substitua os nomes abaixo pelos correspondentes na sua rede.
+
+   # vim /etc/hosts
+
+   Conteúdo a ser acrescentado:
+
+   127.0.0.1       nti98.fcm.unicamp.br    localhost   nti98     #Computador
+   local
+   143.106.46.3    angelim.fcm.unicamp.br    angelim
+
+   Observe que “winactive” é nome do controlador de domínio usado no artigo,
+   troque pelo nome do controlador de domínio de sua rede. Execute o comando
+   abaixo para ver o nome da máquina completo, ou seja, o hostname com o nome
+   do domínio da máquina cliente:
+
+   # hostname -f
+
+   ________________________________________
+
+   Instalação de pacotes necessários
+   Para que o desktop GNU/Linux possa migrar no domínio, é necessário fazer a
+   instalação dos seguintes pacotes descritos a seguir, lembrando que os
+   pacotes abaixo, são para distros Debian like:
+
+   # apt-get install krb5-user krb5-config winbind samba samba-common
+   smbclient cifs-utils libpam-krb5 libpam-winbind libnss-winbind
+
+   Durante a instalação do kerberos, vai ser apresentado algumas telas com
+   perguntas referentes ao KDC, mas pode dá um ENTER e seguir com a
+   instalação dos pacotes, pois a configuração do kerberos será abordada mais
+   a frente.
+
+   Serviço NTP – Sicronizando data e hora com o servidor
+   Para que a máquina cliente possa comunicar-se sem problemas com o
+   controlador de domínio Windows Server, é necessário que o horário e data
+   de ambas as máquinas estejam sincronizadas. Para isso, teremos que
+   configurar o cliente NTP para atualizar data e hora pelo servidor Active
+   Directory.
+
+   Edite o arquivo de configuração do serviço NTP usando o Vim:
+
+   # vim /etc/ntp.conf
+
+   Nas linhas do arquivo onde o conteúdo começa com a palavra “server”,
+   comente estas linhas com uma cerquilha “#”, e adicione o seguinte
+   conteúdo:
+
+   # Controlador de domínio #
+   server 143.106.46.3
+   restrict 143.106.46.3
+
+   Veja que ambos os endereços são do controlador de domínio. Agora, reinicie
+   o serviço de data e hora:
+
+   # /etc/init.d/ntp stop
+   # /etc/init.d/ntp start
+
+   O Ubuntu usa o Upstart, então, para reiniciar o serviço é diferente. Para
+   uma leitura mais abrangente, leia o conteúdo desse link:
+
+   Upstart e a configuração dos serviços no Ubuntu « www.hardware.com.br
+
+   Se não estiver usando um serviço DHCP, edite o arquivo /etc/resolv.conf
+   indicando os endereços dos servidores de nome, como mostrado abaixo:
+
+   # vim /etc/resolv.conf
+
+   search fcm.unicamp.br
+   nameserver 143.106.46.46
+   nameserver 143.106.2.5
+
+   Substitua os endereços acima e o nome do domínio informado pelos endereços
+   de seus servidores DNS e o nome do seu domínio na rede onde está
+   configurando a máquina cliente.
+
+   kerberos
+   Para um usuário autenticar-se no Active Directory, é necessário editar o
+   arquivo /etc/krb5.conf e incluir informações sobre o servidor KDC
+   (controlador de domínio kerberos). Nesse caso, o controlador de domínio
+   com o Active Directory possui um KDC. Use o Vim para editar o arquivo e
+   inclua as seguintes linhas no arquivo:
+
+   # vim /etc/krb5.conf
+
+   Conteúdo acrescentado (eu apaguei tudo que tinha e coloquei estes
+   parâmetros):
+
+   #inicio do arquivo
+   [libdefaults]
+   default_realm = FCM.UNICAMP.BR
+   [realms]
+   FCM.UNICAMP.BR  =  {
+   kdc  =  angelim.fcm.unicamp.br
+   default_domain  =  FCM.UNICAMP.BR
+   admin_server  =  angelim.fcm.unicamp.br
+   }
+
+   [domain_realm]
+   .fcm.unicamp.br = FCM.UNICAMP.BR
+
+   #fim do arquivo
+
+   Explicação da configuração
+   Este arquivo é organizado em seções. As seções inclusas para autenticação
+   no domínio são listadas abaixo junto com suas sub-seções:
+
+   [libdefaults] → Seção que contém valores padrão para o Kerberos V5, nessa
+   seção só deixei uma única sub-seção, explicada a seguir.
+   default_realm → Esta sub-seção identifica o domínio padrão a ser usado
+   pelo cliente kerberos.
+   [realms] → O kerberos divide a rede em domínios seguros, chamados de
+   “realms”, então esta seção contém sub-seções informando nomes de “realms”
+   do Kerberos, informando onde encontrar os servidores Kerberos para
+   domínios seguros específicos e outras informações.
+
+   Neste caso, criei uma sub-seção chamada de “MISTOLI.NET”, que é referente
+   ao domínio seguro no qual a máquina irá ingressar. E dentro, criei as
+   seguintes sub-seções:
+   kdc → Aqui se configura o nome da máquina que está executando o
+   controlador de domínio do kerberos mestre, como o controlador de domínio
+   rodando o Active Directory está executando o KDC, então inclui o nome
+   completo da máquina aqui.
+   default_domain → Nesta sub-seção se especifica o domínio seguro padrão.
+   admin_server → Esta sub-seção identifica o host onde o servidor que faz
+   administração do kerberos está sendo executado.
+
+   [domain_realm] → Seção que indica os mapas de domínios e sub-domínios.
+
+   Depois de configurar o kerberos, vamos testar a comunicação entre o
+   servidor e desktop. Execute o comando abaixo, no exemplo estou usando o
+   nome “administrator”, que é um usuário do domínio criado, mas substitua
+   pelo nome do usuário que estiver cadastrado no servidor.
+
+   # kinit adminitrator
+
+   Se o comando não retornar nenhuma saída, é porque a comunicação está sendo
+   realizada com sucesso. Agora vamos listar o ticket obtido nessa
+   comunicação usando o comando:
+
+   # klist
+
+   O comando klist deverá retornar uma saída como a que está abaixo:
+
+   Ticket cache: FILE:/tmp/krb5cc_10215_nfXG8b
+   Default principal: administrator@FCM.UNICAMP.BR
+
+   Valid starting       Expires              Service principal
+   30-03-2015 13:42:20  30-03-2015 23:42:25 
+   krbtgt/FCM.UNICAMP.BR@FCM.UNICAMP.BR
+   renew until 31-03-2015 13:42:20
+
+   _______________________________________
+
+   Configurando Samba, ingressando máquina no domínio e arquivo
+   /etc/nsswitch.conf
+   Configurando o Samba
+   Antes de colocar a máquina no domínio, é necessário configurar o Samba
+   para que seja possível à máquina ingressar no domínio. Toda configuração é
+   feita no /etc/samba/smb.conf, o Winbind não precisa configurar pois o
+   mesmo é um daemon usado pelo Samba.
+
+   Edite o arquivo /etc/samba/smb.conf com Vim:
+
+   # vim /etc/samba/smb.conf
+
+   Inclua as seguintes linhas no arquivo “smb.conf”, caso algumas dessas
+   linhas já estejam dentro do arquivo, edite e deixa-as como está abaixo. O
+   arquivo está bem comentado com explicações dos principais parâmetros
+   (Apague tudo que tem e coloque as configurações a seguir):
+
+   # Inicio do arquivo
+   [global]
+   security = ads
+   realm= FCM.UNICAMP.BR
+   workgroup = FCM
+   idmap uid = 10000-15000
+   idmap gid = 10000-15000
+   winbind enum users = yes
+   winbind enum groups = yes
+   template homedir = /home/%D/%U
+   template shell = /bin/bash
+   client use spnego = yes
+   client ntlmv2 auth = yes
+   winbind use default domain = yes
+   restrict anonymous = 2
+   winbind refresh tickets = yes
+
+   #Fim do arquivo
+
+   Observe que nem todos os parâmetros são necessários para ingressar a
+   máquina no domínio. Depois de editar, salve as alterações e reinicie os
+   serviços do Samba e Winbind.
+
+   # service winbind restart
+   # service samba restart
+
+   No Ubuntu, reinicie da seguinte forma:
+
+   # service winbind restart
+   # restart smbd
+   # restart nmbd
+
+   Ingressando a máquina no domínio
+   Depois de configurar o Samba, é hora de ingressar a máquina no domínio com
+   o comando net. Execute o comando abaixo como root:
+
+   # net ads join -U administrator
+
+   Veja que usei a opção “-U” no comando net, seguido do nome do usuário com
+   permissão de ingressar máquinas no domínio, o usuário Administrador foi
+   usado. Após a execução do comando, deverá retornar uma mensagem como que
+   está abaixo:
+
+   Using short domain name – FCM
+   Joined ‘MINTVIRT’ to realm ‘FCM.UNICAMP.BR’
+
+   Agora, faça o teste e liste os grupos e usuários do domínio com o comando
+   wbinfo. Para listar usuários execute:
+
+   # wbinfo -u
+
+   Para listar os grupos execute:
+
+   # wbinfo -g
+
+   Caso não retorne nenhum nome de usuário ou grupo, reinicie o Winbind.
+
+   __________________________________________________
+   Arquivo nsswitch.conf
+   Depois ingressar a máquina no domínio, vamos configurar o arquivo
+   /etc/nsswitch.conf para que o sistema possa saber onde buscar informações
+   de login dos usuários que estão se autenticando. É neste arquivo que
+   iremos comunicar ao sistema que ele deve procurar nossas informações de
+   login usando o Winbind.
+
+   Edite o arquivo usando o Vim e deixando as linhas abaixo como demonstrado.
+   Em seguida, salve as alterações:
+
+   # vim /etc/nsswitch.conf
+
+   Conteúdo alterado:
+
+   passwd: compat winbind
+   group: compat winbind
+
+   Veja que, como estamos lidando com usuários, grupos e senhas, apenas
+   alteramos as linhas que correspondem aos mesmos, estamos informando ao
+   sistema que ele deve procurar nossas informações de login usando o Winbind
+   nas linhas:
+
+   “passwd: compat” para senha
+   “group: compat” para group
+
+   _________________________________________________
+
+   Alguns detalhes e esclarecimentos
+   Muitos howtos encontrados na Internet mostram configurações adicionais
+   desnecessárias, fazendo alterações em vários arquivos de autenticação do
+   PAM. Mas a maioria destas configurações não são necessárias, pois ao
+   instalar os pacotes Winbind e o pacote que contém as bibliotecas do
+   kerberos, o próprio sistema se encarrega de alterar os arquivos sem
+   qualquer intervenção dos usuários, com exceção de um arquivo.
+
+   O único arquivo que se faz necessário a intervenção do usuário é o
+   /etc/pam.d/common-session (em distros Debian like).
+
+   Então, edite o arquivo /etc/pam.d/common-session e após linha abaixo:
+
+   session required pam_unix.so
+
+   Inclua esta:
+
+   session required pam_mkhomedir.so umask=0022 skel=/etc/skel
+
+   A linha mencionada anteriormente faz o diretório home de cada usuário ser
+   criado automaticamente no inicio de cada sessão após a autenticação do
+   usuário, setando as permissões para os arquivos e diretórios com a “umask
+   0022” e obtendo do diretório /etc/skel seus sub-diretórios e arquivos
+   padrões.
+
+   Fonte e mais informações:
+   http://www.vivaolinux.com.br/artigo/Ingressar-desktop-GNU-Linux-no-dominio-Active-Directory-do-Windows-Server-2008/?pagina=1
+
+    Related Posts
+
+   ssh “Are you sure you want to continue connecting”
+
+  ssh “Are you sure you want to continue connecting”
+
+   7 de abril de 20227 de abril de 2022
+
+   Exibir LUNs conectadas no Linux
+
+  Exibir LUNs conectadas no Linux
+
+   31 de março de 202231 de março de 2022
+
+   Alterando usuário do Mysql / Mariadb
+
+  Alterando usuário do Mysql / Mariadb
+
+   16 de fevereiro de 202216 de fevereiro de 2022
+
+Navegação de Post
+
+   Previous Article Instalar o Windows 8 a partir do USB num sistema com UEFI
+   Next Article Usando laço for no CMD para copiar arquivos em massa
+
+    About admin
+
+   View all posts by admin →
+   Pesquisar por: _____________________  [ Pesquisar ]
+
+    Posts recentes
+
+     * ssh “Are you sure you want to continue connecting”
+     * Exibir LUNs conectadas no Linux
+     * Alterando usuário do Mysql / Mariadb
+     * DNS Search no Debian 11
+     * Como fica alguns comandos do Mysql no PostgreSql
+
+    Comentários
+
+    Arquivos
+
+     * abril 2022
+     * março 2022
+     * fevereiro 2022
+     * janeiro 2022
+     * novembro 2021
+     * outubro 2021
+     * setembro 2021
+     * agosto 2021
+     * julho 2021
+     * fevereiro 2021
+     * abril 2020
+     * março 2020
+     * janeiro 2020
+     * dezembro 2019
+     * novembro 2019
+     * agosto 2019
+     * abril 2019
+     * março 2019
+     * fevereiro 2019
+     * junho 2018
+     * abril 2018
+     * março 2018
+     * fevereiro 2018
+     * janeiro 2018
+     * novembro 2017
+     * outubro 2017
+     * fevereiro 2017
+     * abril 2016
+     * janeiro 2016
+     * novembro 2015
+     * outubro 2015
+     * setembro 2015
+     * agosto 2015
+     * julho 2015
+     * abril 2015
+     * março 2015
+     * fevereiro 2015
+
+    Categorias
+
+     * Artigos
+          * Linux
+          * Outros
+          * Redes
+               * Cisco
+          * Web
+          * Windows
+
+    Meta
+
+     * Acessar
+     * Feed de posts
+     * Feed de comentários
+     * WordPress.org
+   Copyright © 2022 GA Tech.
+   Powered by WordPress and HitMag.
